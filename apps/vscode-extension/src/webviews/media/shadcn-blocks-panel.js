@@ -211,7 +211,7 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-// Main functions
+// Fetch Sections Data
 function fetchSectionsData() {
   showLoadingState(true);
   vscode.postMessage({ type: 'fetchSectionsData' });
@@ -451,11 +451,16 @@ function goBackToBlocks() {
   fetchSectionsData();
 }
 
-// Render block details
-function renderBlockDetails(data, error) {
-  console.log('Rendering block details:', data, error);
+// Render Section details
+function renderSectionDetails(data, error) {
   const containerGrid = document.getElementById('containerGrid');
   if (!containerGrid) return;
+
+  if (error) {
+    console.error('Error loading section details:', error);
+    showErrorState(error);
+    return;
+  }
 
   if (error || !data) {
     containerGrid.innerHTML = `
@@ -468,7 +473,6 @@ function renderBlockDetails(data, error) {
     return;
   }
 
-  // Data is an array of items (blocks in the section)
   const items = Array.isArray(data) ? data : [data];
 
   if (items.length === 0) {
@@ -493,27 +497,14 @@ function renderBlockDetails(data, error) {
         .map(
           (item) => `
         <div class="file-item">
+        CLI v3: npx shadcn@latest add @ss-blocks/${item.name}
+        CLI v2: npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${item.name}"
+      
           <div class="file-header">
             <span class="file-name">${escapeHtml(item.name || 'Unknown Block')}</span>
             <span class="file-type">${escapeHtml(item.meta?.title || item.type || '')}</span>
           </div>
           <p class="file-description">${escapeHtml(item.description || '')}</p>
-          ${
-            item.files && item.files.length > 0
-              ? `<div class="file-paths">${item.files.map((f) => `<span class="file-path">${escapeHtml(f.path || f.target || '')}</span>`).join('')}</div>`
-              : ''
-          }
-          ${
-            (item.dependencies && item.dependencies.length > 0) ||
-            (item.registryDependencies && item.registryDependencies.length > 0)
-              ? `
-            <div class="dependencies-list">
-              ${(item.dependencies || []).map((dep) => `<span class="dependency-tag">${escapeHtml(dep)}</span>`).join('')}
-              ${(item.registryDependencies || []).map((dep) => `<span class="dependency-tag">@shadcn/${escapeHtml(dep)}</span>`).join('')}
-            </div>
-          `
-              : ''
-          }
         </div>
       `,
         )
@@ -586,7 +577,7 @@ window.addEventListener('message', (event) => {
         showErrorState(message.error);
         return;
       }
-      renderBlockDetails(message.data, message.error);
+      renderSectionDetails(message.data, message.error);
       showContainerGrid(); // Show containerGrid and hide other states
       break;
   }
@@ -715,7 +706,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // Make functions globally accessible
 window.filterBlocks = filterBlocks;
 window.setFilter = setFilter;
-window.openBlockDetails = openBlockDetails;
 window.goBackToBlocks = goBackToBlocks;
 window.copyBlockCode = copyBlockCode;
 window.sendToIDEAgent = sendToIDEAgent;
