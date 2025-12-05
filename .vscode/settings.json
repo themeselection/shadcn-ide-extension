@@ -19,5 +19,12 @@
   },
   "[markdown]": {
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
-  }
+  },
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features",
+    "editor.tabSize": 2
+  },
+  "html.format.indentInnerHtml": true,
+  "html.format.wrapLineLength": 80,
+  "html.format.wrapAttributes": "auto"
 }

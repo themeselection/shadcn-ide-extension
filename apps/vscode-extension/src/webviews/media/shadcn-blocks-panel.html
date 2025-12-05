@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>shadcn/ui Blocks</title>
+    <link rel="stylesheet" href="{{styleUri}}" />
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <div class="header-content">
+          <h1 class="title">
+            <span class="shadcn-logo">S</span>
+            Shadcn IDE Extension
+          </h1>
+          <button id="refreshBtn" class="btn btn-secondary"
+            title="Refresh blocks">
+            <span class="icon">↻ Refresh</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- License Section -->
+      <div class="license-section">
+        <div class="license-header">
+          <span class="license-title">License</span>
+          <button id="toggleLicenseBtn" class="btn-toggle"
+            title="Toggle license form">
+            <span class="toggle-icon">▼</span>
+          </button>
+        </div>
+        <div id="licenseContent" class="license-content">
+          <div class="license-status" id="licenseStatus">
+            <span class="status-dot inactive"></span>
+            <span class="status-text">No license configured</span>
+          </div>
+          <div class="license-form">
+            <div class="form-group">
+              <label for="emailInput">Email</label>
+              <input type="email" id="emailInput" class="form-input"
+                placeholder="your@email.com" />
+            </div>
+            <div class="form-group">
+              <label for="licenseKeyInput">License Key</label>
+              <input type="text" id="licenseKeyInput" class="form-input"
+                placeholder="XXXX-XXXX-XXXX-XXXX" />
+            </div>
+            <button id="saveLicenseBtn" class="btn btn-primary btn-sm">
+              <span class="icon">💾</span>
+              Save License
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search and Filter -->
+      <div class="search-filter-container">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput"
+            placeholder="Search Shadcn Studio..." class="search-input" />
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loadingState" class="loading-state hidden">
+        <div class="spinner"></div>
+        <p>Loading blocks...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="empty-state">
+        <div class="empty-icon">📦</div>
+        <h3>No Sections found</h3>
+        <p>Click the button below to fetch Shadcn Studio blocks</p>
+        <button id="fetchSectionBtn" class="btn btn-primary btn-large">
+          <span class="icon">⬇️</span>
+          Fetch Sections
+        </button>
+      </div>
+
+      <!-- Error State -->
+      <div id="errorState" class="error-state hidden">
+        <div class="error-icon">⚠️</div>
+        <h3>Error Loading Blocks</h3>
+        <p id="errorMessage">Failed to load blocks from shadcn studio registry
+        </p>
+        <button id="retryBtn" class="btn btn-secondary">
+          <span class="icon">↻</span>
+          Retry
+        </button>
+      </div>
+
+      <!-- Container Grid -->
+      <div id="containerGrid" class="container-grid hidden"></div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p>
+          <a href="#" id="shadcnLink" class="link">shadcn/ui</a> •
+          <a href="#" id="githubLink" class="link">GitHub</a> •
+          <a href="#" id="docsLink" class="link">Documentation</a>
+        </p>
+      </div>
+    </div>
+    <script src="{{scriptUri}}"></script>
+  </body>
+
+</html>

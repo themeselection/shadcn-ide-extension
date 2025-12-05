@@ -13,6 +13,7 @@ import {
   createGettingStartedPanel,
   shouldShowGettingStarted,
 } from 'src/webviews/getting-started';
+import { ShadcnBlocksProvider } from 'src/webviews/shadcn-blocks-panel';
 import * as vscode from 'vscode';
 import { removeOldToolbar } from '../auto-prompts/remove-old-toolbar';
 import { createTimeToUpgradePanel } from '../webviews/time-to-upgrade';
@@ -166,6 +167,15 @@ export async function activate(context: vscode.ExtensionContext) {
       ),
     );
 
+    // Register the shadcn/ui Blocks webview provider for sidebar
+    const shadcnBlocksProvider = new ShadcnBlocksProvider(context.extensionUri);
+    context.subscriptions.push(
+      vscode.window.registerWebviewViewProvider(
+        ShadcnBlocksProvider.viewType,
+        shadcnBlocksProvider,
+      ),
+    );
+
     // Command to focus the API Data view
     const focusApiDataViewCommand = vscode.commands.registerCommand(
       'flyonui.focusApiDataView',
@@ -174,6 +184,26 @@ export async function activate(context: vscode.ExtensionContext) {
       },
     );
     context.subscriptions.push(focusApiDataViewCommand);
+
+    // Command to focus the shadcn/ui Blocks view
+    const focusShadcnBlocksViewCommand = vscode.commands.registerCommand(
+      'shadcn.focusBlocksView',
+      async () => {
+        await vscode.commands.executeCommand('shadcn.blocksView.focus');
+      },
+    );
+    context.subscriptions.push(focusShadcnBlocksViewCommand);
+
+    // Command to open shadcn blocks panel (backward compatibility)
+    const openShadcnBlocksPanelCommand = vscode.commands.registerCommand(
+      'shadcn.openBlocksPanel',
+      () => {
+        vscode.window.showInformationMessage(
+          'shadcn/ui Blocks Panel is available in the sidebar. Look for the FlyonUI icon in the Activity Bar.',
+        );
+      },
+    );
+    context.subscriptions.push(openShadcnBlocksPanelCommand);
 
     // Keep the old command for backward compatibility (optional)
     const disposablePanel = vscode.commands.registerCommand(

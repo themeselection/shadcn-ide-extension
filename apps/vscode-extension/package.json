@@ -37,6 +37,16 @@
         "command": "flyonui.focusApiDataView",
         "title": "Focus FlyonUI Blocks Panel",
         "category": "FlyonUI"
+      },
+      {
+        "command": "shadcn.openBlocksPanel",
+        "title": "Open shadcn/ui Blocks Panel",
+        "category": "shadcn"
+      },
+      {
+        "command": "shadcn.focusBlocksView",
+        "title": "Focus shadcn/ui Blocks Panel",
+        "category": "shadcn"
       }
     ],
     "viewsContainers": {
@@ -55,6 +65,13 @@
           "id": "flyonui.apiDataView",
           "name": "Premium FlyonUI Blocks",
           "icon": "$(rocket)",
+          "when": "true"
+        },
+        {
+          "type": "webview",
+          "id": "shadcn.blocksView",
+          "name": "shadcn/ui Blocks",
+          "icon": "$(code)",
           "when": "true"
         }
       ]
@@ -94,6 +111,22 @@
             "default": "",
             "description": "Your FlyonUI Pro license key. Get your license at https://flyonui.com/pro",
             "markdownDescription": "Your FlyonUI Pro license key. Get your license at [FlyonUI Pro](https://flyonui.com/pro)"
+          }
+        }
+      },
+      {
+        "title": "shadcn",
+        "type": "object",
+        "properties": {
+          "shadcn.licenseEmail": {
+            "type": "string",
+            "default": "",
+            "description": "Your email associated with the license"
+          },
+          "shadcn.licenseKey": {
+            "type": "string",
+            "default": "",
+            "description": "Your license key"
           }
         }
       }
