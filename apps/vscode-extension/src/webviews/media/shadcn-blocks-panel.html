@@ -57,47 +57,49 @@
         </div>
       </div>
 
-      <!-- Search and Filter -->
-      <div class="search-filter-container">
-        <div class="search-box">
-          <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput"
-            placeholder="Search Shadcn Studio..." class="search-input" />
+      <div class="main-content">
+        <!-- Search and Filter -->
+        <div class="search-filter-container">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput"
+              placeholder="Search Shadcn Studio..." class="search-input" />
+          </div>
         </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state hidden">
+          <div class="spinner"></div>
+          <p>Loading blocks...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state">
+          <div class="empty-icon">📦</div>
+          <h3>No Sections found</h3>
+          <p>Click the button below to fetch Shadcn Studio blocks</p>
+          <button id="fetchSectionBtn" class="btn btn-primary btn-large">
+            <span class="icon">⬇️</span>
+            Fetch Sections
+          </button>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="error-state hidden">
+          <div class="error-icon">⚠️</div>
+          <h3>Error Loading Blocks</h3>
+          <p id="errorMessage">Failed to load blocks from shadcn studio registry
+          </p>
+          <button id="retryBtn" class="btn btn-secondary">
+            <span class="icon">↻</span>
+            Retry
+          </button>
+        </div>
+
+        <!-- Container Grid -->
+        <div id="containerGrid" class="container-grid hidden"></div>
+
       </div>
-
-      <!-- Loading State -->
-      <div id="loadingState" class="loading-state hidden">
-        <div class="spinner"></div>
-        <p>Loading blocks...</p>
-      </div>
-
-      <!-- Empty State -->
-      <div id="emptyState" class="empty-state">
-        <div class="empty-icon">📦</div>
-        <h3>No Sections found</h3>
-        <p>Click the button below to fetch Shadcn Studio blocks</p>
-        <button id="fetchSectionBtn" class="btn btn-primary btn-large">
-          <span class="icon">⬇️</span>
-          Fetch Sections
-        </button>
-      </div>
-
-      <!-- Error State -->
-      <div id="errorState" class="error-state hidden">
-        <div class="error-icon">⚠️</div>
-        <h3>Error Loading Blocks</h3>
-        <p id="errorMessage">Failed to load blocks from shadcn studio registry
-        </p>
-        <button id="retryBtn" class="btn btn-secondary">
-          <span class="icon">↻</span>
-          Retry
-        </button>
-      </div>
-
-      <!-- Container Grid -->
-      <div id="containerGrid" class="container-grid hidden"></div>
-
       <!-- Footer -->
       <div class="footer">
         <p>
@@ -107,6 +109,7 @@
         </p>
       </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
     <script src="{{scriptUri}}"></script>
   </body>
 

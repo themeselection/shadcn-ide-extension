@@ -8,6 +8,9 @@ let searchQuery = '';
 let currentBlockPath = null;
 let currentBlockName = null;
 let licenseData = { email: '', licenseKey: '' };
+let isInSectionDetails = false;
+let currentSectionItems = [];
+let CLIVersion = 'cli-v3';
 
 // License management functions
 function initializeLicense() {
@@ -75,100 +78,30 @@ function toggleLicenseSection() {
   }
 }
 
-// Fuzzy search utility function
-function fuzzyMatch(text, query) {
-  if (!text || !query) return { match: false, score: 0 };
+// Fuse.js configuration
+let sectionsFuse = null;
+let itemsFuse = null;
 
-  const lowerText = text.toLowerCase();
-  const lowerQuery = query.toLowerCase();
-
-  // Exact match gets highest score
-  if (lowerText.includes(lowerQuery)) {
-    return { match: true, score: 100 - lowerText.indexOf(lowerQuery) * 10 };
-  }
-
-  // Fuzzy matching algorithm
-  let textIndex = 0;
-  let queryIndex = 0;
-  const matches = [];
-  let consecutiveMatches = 0;
-  let totalScore = 0;
-
-  while (textIndex < lowerText.length && queryIndex < lowerQuery.length) {
-    if (lowerText[textIndex] === lowerQuery[queryIndex]) {
-      matches.push(textIndex);
-      consecutiveMatches++;
-      queryIndex++;
-      totalScore += consecutiveMatches * 2;
-    } else {
-      consecutiveMatches = 0;
-    }
-    textIndex++;
-  }
-
-  if (queryIndex === lowerQuery.length) {
-    const wordBoundaryBonus =
-      matches.filter(
-        (index) =>
-          index === 0 ||
-          lowerText[index - 1] === ' ' ||
-          lowerText[index - 1] === '-' ||
-          lowerText[index - 1] === '_',
-      ).length * 5;
-
-    const spread =
-      matches.length > 1 ? matches[matches.length - 1] - matches[0] : 0;
-    const spreadPenalty = Math.floor(spread / lowerQuery.length);
-
-    totalScore += wordBoundaryBonus - spreadPenalty;
-
-    const normalizedScore = Math.max(
-      0,
-      Math.min(100, totalScore * (lowerQuery.length / lowerText.length) * 50),
-    );
-
-    return { match: true, score: normalizedScore };
-  }
-
-  return { match: false, score: 0 };
+function initializeSectionsFuse(data) {
+  const fuseOptions = {
+    keys: ['name', 'description'],
+    threshold: 0.4,
+    includeScore: true,
+    ignoreLocation: true,
+    minMatchCharLength: 2,
+  };
+  sectionsFuse = new Fuse(data, fuseOptions);
 }
 
-function fuzzySearchItems(items, query, searchFields) {
-  if (!query.trim()) {
-    return items;
-  }
-
-  const results = [];
-
-  items.forEach((item) => {
-    let bestScore = 0;
-    let hasMatch = false;
-
-    searchFields.forEach((field) => {
-      const fieldValue = getNestedProperty(item, field);
-      if (fieldValue) {
-        const result = fuzzyMatch(fieldValue, query);
-        if (result.match) {
-          hasMatch = true;
-          bestScore = Math.max(bestScore, result.score);
-        }
-      }
-    });
-
-    if (hasMatch) {
-      results.push({ item, score: bestScore });
-    }
-  });
-
-  results.sort((a, b) => b.score - a.score);
-
-  return results.map((result) => result.item);
-}
-
-function getNestedProperty(obj, path) {
-  return path.split('.').reduce((current, key) => {
-    return current && current[key] !== undefined ? current[key] : '';
-  }, obj);
+function initializeItemsFuse(data) {
+  const fuseOptions = {
+    keys: ['name', 'description', 'meta.title'],
+    threshold: 0.4,
+    includeScore: true,
+    ignoreLocation: true,
+    minMatchCharLength: 2,
+  };
+  itemsFuse = new Fuse(data, fuseOptions);
 }
 
 function highlightMatches(text, query) {
@@ -221,13 +154,6 @@ function refreshData() {
   fetchSectionsData();
 }
 
-function copyToClipboard(text) {
-  vscode.postMessage({
-    type: 'copyToClipboard',
-    text: text,
-  });
-}
-
 function openBlock(path, name) {
   currentBlockPath = path;
   currentBlockName = name;
@@ -238,10 +164,17 @@ function openBlock(path, name) {
   });
 }
 
-function copyBlockCode(path) {
+function copyInstallationCmd(command) {
   vscode.postMessage({
-    type: 'copyBlockCode',
-    path: path,
+    type: 'copyToClipboard',
+    text: command,
+  });
+}
+
+function installCmd(command) {
+  vscode.postMessage({
+    type: 'openTerminalandInstall',
+    command,
   });
 }
 
@@ -329,7 +262,11 @@ function showContainerGrid() {
 // Filter blocks
 function filterBlocks(searchTerm) {
   searchQuery = searchTerm.trim().toLowerCase();
-  renderBlocksGrid();
+  if (isInSectionDetails) {
+    renderSectionDetailsFiltered();
+  } else {
+    renderSections();
+  }
 }
 
 function setFilter(filter) {
@@ -345,7 +282,11 @@ function setFilter(filter) {
     }
   });
 
-  renderBlocksGrid();
+  if (isInSectionDetails) {
+    renderSectionDetailsFiltered();
+  } else {
+    renderSections();
+  }
 }
 
 // Render blocks grid
@@ -353,21 +294,25 @@ function renderSections() {
   const containerGrid = document.getElementById('containerGrid');
   if (!containerGrid) return;
 
-  const filteredSections = sectionsData.filter((section) => {
-    const matchesSearch =
-      !searchQuery ||
-      section.name.toLowerCase().includes(searchQuery) ||
-      section.description?.toLowerCase().includes(searchQuery);
+  let filteredSections = sectionsData;
 
-    const matchesFilter =
-      currentFilter === 'all' ||
-      section.name.toLowerCase().includes(currentFilter) ||
-      section.categories?.some((cat) =>
-        cat.toLowerCase().includes(currentFilter),
+  // Apply fuzzy search using Fuse.js
+  if (searchQuery && sectionsFuse) {
+    const results = sectionsFuse.search(searchQuery);
+    filteredSections = results.map((result) => result.item);
+  }
+
+  // Apply category filter
+  if (currentFilter !== 'all') {
+    filteredSections = filteredSections.filter((section) => {
+      return (
+        section.name.toLowerCase().includes(currentFilter) ||
+        section.categories?.some((cat) =>
+          cat.toLowerCase().includes(currentFilter),
+        )
       );
-
-    return matchesSearch && matchesFilter;
-  });
+    });
+  }
 
   if (filteredSections.length === 0) {
     containerGrid.innerHTML = `
@@ -381,7 +326,6 @@ function renderSections() {
 
   containerGrid.innerHTML = filteredSections
     .map((section) => {
-      console.log('Rendering section:', section);
       return createSectionCardHtml(section);
     })
     .join('');
@@ -404,27 +348,13 @@ function createSectionCardHtml(section) {
   return `
     <div class="section-card" data-id="${escapeHtml(section.id)}" data-name="${escapeHtml(section.name)}">
       <div class="section-preview">
-        ${getSectionIcon(section.name)}
+        ${displayName}
       </div>
       <div class="section-info">
-        <p class="section-name">${displayName}</p>
         <p class="section-type">${section.count || 0} blocks</p>
       </div>
     </div>
   `;
-}
-
-function getSectionIcon(name) {
-  const nameLower = name.toLowerCase();
-  if (nameLower.includes('sidebar')) return '📑';
-  if (nameLower.includes('login') || nameLower.includes('auth')) return '🔐';
-  if (nameLower.includes('dashboard')) return '📊';
-  if (nameLower.includes('chart')) return '📈';
-  if (nameLower.includes('table')) return '📋';
-  if (nameLower.includes('form')) return '📝';
-  if (nameLower.includes('card')) return '🃏';
-  if (nameLower.includes('calendar')) return '📅';
-  return '▢';
 }
 
 function formateSectionName(name) {
@@ -436,8 +366,11 @@ function formateSectionName(name) {
 
 // Open Section details
 function openSectionDetails(id, name) {
-  currentSectionId = id;
   currentSectionName = name;
+  isInSectionDetails = true;
+  searchQuery = ''; // Clear search when entering section details
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) searchInput.value = '';
 
   // Fetch section details
   vscode.postMessage({
@@ -448,6 +381,12 @@ function openSectionDetails(id, name) {
 }
 
 function goBackToBlocks() {
+  isInSectionDetails = false;
+  currentSectionItems = [];
+  itemsFuse = null;
+  searchQuery = ''; // Clear search when going back
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) searchInput.value = '';
   fetchSectionsData();
 }
 
@@ -464,7 +403,10 @@ function renderSectionDetails(data, error) {
 
   if (error || !data) {
     containerGrid.innerHTML = `
-      <button class="go-back-btn" onclick="goBackToBlocks()">← Go Back</button>
+      <button class="go-back-btn" onclick="goBackToBlocks()">
+        <span class="back-icon">←</span>
+        <span>Go Back</span>
+      </button>
       <div class="details-loading">
         <div class="error-icon">⚠️</div>
         <p>${escapeHtml(error) || 'Failed to load block details'}</p>
@@ -474,67 +416,90 @@ function renderSectionDetails(data, error) {
   }
 
   const items = Array.isArray(data) ? data : [data];
+  currentSectionItems = items;
+  initializeItemsFuse(items);
+  renderSectionDetailsFiltered();
+}
+
+// Render filtered section details
+function renderSectionDetailsFiltered() {
+  const containerGrid = document.getElementById('containerGrid');
+  if (!containerGrid) return;
+
+  let filteredItems = currentSectionItems;
+
+  // Apply fuzzy search using Fuse.js
+  if (searchQuery && itemsFuse) {
+    const results = itemsFuse.search(searchQuery);
+    filteredItems = results.map((result) => result.item);
+  }
+
+  const items = filteredItems;
 
   if (items.length === 0) {
+    const message = searchQuery
+      ? `No blocks found matching "${escapeHtml(searchQuery)}"`
+      : 'No blocks found in this section';
     containerGrid.innerHTML = `
-      <button class="go-back-btn" onclick="goBackToBlocks()">← Go Back</button>
+      <button class="go-back-btn" onclick="goBackToBlocks()">
+        <span class="back-icon">←</span>
+        <span>Go Back</span>
+      </button>
       <div class="details-loading">
-        <div class="error-icon">📭</div>
-        <p>No blocks found in this section</p>
+        <div class="error-icon">🔍</div>
+        <p>${message}</p>
       </div>
     `;
     return;
   }
 
   containerGrid.innerHTML = `
-    <button class="go-back-btn" onclick="goBackToBlocks()">← Go Back</button>
-    <div class="section-header">
-      <h3>${escapeHtml(currentSectionName || 'Section Details')}</h3>
-      <span class="item-count">${items.length} blocks</span>
+    <button class="go-back-btn" onclick="goBackToBlocks()">
+      <span class="back-icon">←</span>
+      <span>Go Back</span>
+    </button>
+    <div class="section-details-header">
+      <h3 class="section-title">${escapeHtml(formateSectionName(currentSectionName) || 'Section Details')}</h3>
+      <div class="header-right">
+        <span class="block-count-badge">${items.length} blocks</span>
+        <select name="cliselect" id="cliSelector" class="cli-select">
+          <option value="cli-v3">CLI v3</option>
+          <option value="cli-v2">CLI v2</option>    
+        </select>
+      </div>
     </div>
-    <div class="details-files">
+    <div class="blocks-list">
       ${items
         .map(
-          (item) => `
-        <div class="file-item">
-        CLI v3: npx shadcn@latest add @ss-blocks/${item.name}
-        CLI v2: npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${item.name}"
-      
-          <div class="file-header">
-            <span class="file-name">${escapeHtml(item.name || 'Unknown Block')}</span>
-            <span class="file-type">${escapeHtml(item.meta?.title || item.type || '')}</span>
+          (item, index) => `
+        <div class="block-item">
+          <div class="block-item-header">
+            <div class="block-name-wrapper">
+              <span class="block-item-name">${searchQuery ? highlightMatches(item.name || 'Unknown Block', searchQuery) : escapeHtml(item.name || 'Unknown Block')}</span>
+              <span class="block-item-badge">${escapeHtml(item.meta?.title || item.type || 'Block ' + (index + 1))}</span>
+            </div>
           </div>
-          <p class="file-description">${escapeHtml(item.description || '')}</p>
+          ${item.description ? `<p class="block-item-description">${searchQuery ? highlightMatches(item.description, searchQuery) : escapeHtml(item.description)}</p>` : ''}
+          <div class="block-item-actions">
+            <button class="btn-action btn-preview" onclick="openExternalUrl('https://shadcnstudio.com/preview/${item.meta?.category || ''}/${item.meta?.section || ''}/${item.name}')">
+              <span class="action-icon">👁</span>
+              <span>Preview Block</span>
+            </button>
+            <button class="btn-action btn-copy copy-cmd-btn" data-item="${escapeHtml(item.name)}">
+              <span class="action-icon">📋</span>
+              <span>Copy Command</span>
+            </button>
+            <button class="btn-action btn-install install-cmd-btn" data-item="${escapeHtml(item.name)}">
+              <span class="action-icon">⬇️</span>
+              <span>Install Block</span>
+            </button>
+          </div>
         </div>
       `,
         )
         .join('')}
     </div>
   `;
-}
-
-function getFileType(filename) {
-  if (!filename) return 'file';
-  const ext = filename.split('.').pop()?.toLowerCase();
-  switch (ext) {
-    case 'tsx':
-    case 'ts':
-      return 'TypeScript';
-    case 'jsx':
-    case 'js':
-      return 'JavaScript';
-    case 'css':
-      return 'CSS';
-    case 'json':
-      return 'JSON';
-    default:
-      return ext?.toUpperCase() || 'file';
-  }
-}
-
-function truncateCode(code, maxLength = 200) {
-  if (code.length <= maxLength) return code;
-  return code.substring(0, maxLength) + '...';
 }
 
 // Handle messages from extension
@@ -564,6 +529,7 @@ window.addEventListener('message', (event) => {
         showErrorState(message.error);
       } else if (message.data && message.data.length > 0) {
         sectionsData = message.data;
+        initializeSectionsFuse(sectionsData);
         renderSections();
         showContainerGrid();
       } else {
@@ -587,6 +553,68 @@ window.addEventListener('message', (event) => {
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize license data
   initializeLicense();
+
+  // Event delegation for buttons (handles dynamically created buttons)
+  document.addEventListener('click', (e) => {
+    // Handle copy command button
+    if (
+      e.target.classList.contains('copy-cmd-btn') ||
+      e.target.closest('.copy-cmd-btn')
+    ) {
+      const btn = e.target.classList.contains('copy-cmd-btn')
+        ? e.target
+        : e.target.closest('.copy-cmd-btn');
+      const itemName = btn.dataset.item;
+      console.log('Item name for installation command:', itemName, CLIVersion);
+      if (itemName) {
+        const command =
+          CLIVersion === 'cli-v3'
+            ? `npx shadcn@latest add @ss-blocks/${itemName}`
+            : `npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${itemName}"`;
+        copyInstallationCmd(command);
+      }
+    }
+
+    // Handle preview button
+    if (
+      e.target.classList.contains('btn-preview') ||
+      e.target.closest('.btn-preview')
+    ) {
+      const btn = e.target.classList.contains('btn-preview')
+        ? e.target
+        : e.target.closest('.btn-preview');
+      const previewUrl = btn.dataset.previewUrl;
+      if (previewUrl) {
+        openExternalUrl(previewUrl);
+      }
+    }
+
+    // Handle Install command button
+    if (
+      e.target.classList.contains('install-cmd-btn') ||
+      e.target.closest('.install-cmd-btn')
+    ) {
+      const installBtn = e.target.classList.contains('install-cmd-btn')
+        ? e.target
+        : e.target.closest('.install-cmd-btn');
+      const itemName = installBtn.dataset.item;
+      console.log('Item name for installation command:', itemName, CLIVersion);
+      if (itemName) {
+        const command =
+          CLIVersion === 'cli-v3'
+            ? `npx shadcn@latest add @ss-blocks/${itemName}`
+            : `npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${itemName}"`;
+        installCmd(command);
+      }
+    }
+  });
+
+  // Event delegation for CLI version selector (handles dynamically created select)
+  document.addEventListener('change', (e) => {
+    if (e.target.id === 'cliSelector') {
+      CLIVersion = e.target.value;
+    }
+  });
 
   // License section toggle
   const licenseHeader = document.querySelector('.license-header');
@@ -629,16 +657,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const backBtn = document.getElementById('backBtn');
   if (backBtn) {
     backBtn.addEventListener('click', goBackToBlocks);
-  }
-
-  // Copy code button
-  const copyCodeBtn = document.getElementById('copyCodeBtn');
-  if (copyCodeBtn) {
-    copyCodeBtn.addEventListener('click', () => {
-      if (currentBlockPath) {
-        copyBlockCode(currentBlockPath);
-      }
-    });
   }
 
   // Preview button
@@ -707,7 +725,7 @@ document.addEventListener('DOMContentLoaded', () => {
 window.filterBlocks = filterBlocks;
 window.setFilter = setFilter;
 window.goBackToBlocks = goBackToBlocks;
-window.copyBlockCode = copyBlockCode;
+window.copyInstallationCmd = copyInstallationCmd;
 window.sendToIDEAgent = sendToIDEAgent;
 window.previewBlock = previewBlock;
 window.fetchSectionsData = fetchSectionsData;

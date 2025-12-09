@@ -48,6 +48,9 @@ body {
 }
 
 .header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   flex: 1;
   min-width: 200px;
 }
@@ -396,6 +399,65 @@ body {
   gap: 12px;
 }
 
+/* Section Cards */
+.section-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px; 
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--vscode-input-border, var(--vscode-contrastBorder, transparent));
+  background-color: var(--vscode-editor-background);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.section-card:hover {
+  border-color: var(--vscode-focusBorder);
+  background-color: var(--vscode-list-hoverBackground);
+  transform: translateX(2px);
+}
+
+.section-card-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.section-card-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.section-card-name {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--vscode-foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.section-card-count {
+  font-size: 11px;
+  margin: 2px 0 0 0;
+  color: var(--vscode-descriptionForeground);
+}
+
+.section-card-arrow {
+  font-size: 14px;
+  color: var(--vscode-descriptionForeground);
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.section-card:hover .section-card-arrow {
+  opacity: 1;
+}
+
 .block-card {
   display: flex;
   flex-direction: column;
@@ -485,6 +547,219 @@ body {
   padding: 40px;
 }
 
+/* Go Back Button */
+.go-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 6px;
+  border: 1px solid var(--vscode-input-border, var(--vscode-contrastBorder, transparent));
+  background-color: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-bottom: 8px;
+  width: fit-content;
+}
+
+.go-back-btn:hover {
+  background-color: var(--vscode-button-secondaryHoverBackground);
+  border-color: var(--vscode-focusBorder);
+}
+
+.go-back-btn:active {
+  transform: scale(0.98);
+}
+
+.go-back-btn .back-icon {
+  font-size: 14px;
+  transition: transform 0.15s ease;
+}
+
+.go-back-btn:hover .back-icon {
+  transform: translateX(-2px);
+}
+
+/* Section Details Header */
+.section-details-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background-color: var(--vscode-sideBar-background, var(--vscode-editor-background));
+  border: 1px solid var(--vscode-input-border, var(--vscode-contrastBorder, transparent));
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--vscode-foreground);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.block-count-badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 10px;
+  background-color: var(--vscode-badge-background);
+  color: var(--vscode-badge-foreground);
+}
+
+.cli-selector-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.cli-select {
+  padding: 4px 8px;
+  font-size: 11px;
+  border-radius: 4px;
+  border: 1px solid var(--vscode-input-border, var(--vscode-contrastBorder, transparent));
+  background-color: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.cli-select:hover {
+  border-color: var(--vscode-focusBorder);
+}
+
+.cli-select:focus {
+  border-color: var(--vscode-focusBorder);
+}
+
+/* Blocks List */
+.blocks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Block Item Card */
+.block-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-input-border, var(--vscode-contrastBorder, transparent));
+  transition: all 0.15s ease;
+}
+
+.block-item:hover {
+  border-color: var(--vscode-focusBorder);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.block-item-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.block-name-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.block-item-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--vscode-textLink-foreground);
+  word-break: break-word;
+}
+
+.block-item-badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background-color: var(--vscode-badge-background);
+  color: var(--vscode-badge-foreground);
+  white-space: nowrap;
+}
+
+.block-item-description {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--vscode-descriptionForeground);
+  margin: 0;
+}
+
+/* Block Item Actions */
+.block-item-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.btn-action:hover {
+  transform: translateY(-1px);
+}
+
+.btn-action:active {
+  transform: scale(0.98);
+}
+
+.btn-action .action-icon {
+  font-size: 12px;
+}
+
+.btn-preview {
+  background-color: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+  border-color: var(--vscode-input-border, var(--vscode-contrastBorder, transparent));
+}
+
+.btn-preview:hover {
+  background-color: var(--vscode-button-secondaryHoverBackground);
+  border-color: var(--vscode-focusBorder);
+}
+
+.btn-copy {
+  background-color: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+}
+
+.btn-copy:hover {
+  background-color: var(--vscode-button-hoverBackground);
+}
+
+/* Legacy file styles (keeping for backward compatibility) */
 .details-files {
   display: flex;
   flex-direction: column;
@@ -526,6 +801,14 @@ body {
   white-space: pre-wrap;
   overflow: hidden;
   max-height: 80px;
+}
+
+/* Search Highlight */
+.search-highlight {
+  background-color: var(--vscode-editor-findMatchHighlightBackground, rgba(255, 213, 0, 0.4));
+  color: inherit;
+  border-radius: 2px;
+  padding: 0 2px;
 }
 
 .details-actions {

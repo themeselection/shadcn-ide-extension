@@ -46,7 +46,6 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
         case 'openSectionDetails':
           await this._fetchSectionDetails(data.id, data.name);
           break;
-
         case 'copyToClipboard':
           await vscode.env.clipboard.writeText(data.text);
           vscode.window.showInformationMessage('📋 Copied to clipboard!');
@@ -71,6 +70,9 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
           break;
         case 'saveLicenseData':
           await this._saveLicenseData(data.data);
+          break;
+        case 'openTerminalandInstall':
+          await this._openTerminalandInstall(data.command);
           break;
       }
     });
@@ -99,6 +101,7 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
         data.email,
         vscode.ConfigurationTarget.Global,
       );
+
       await config.update(
         'licenseKey',
         data.licenseKey,
@@ -123,6 +126,25 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
           success: false,
         });
       }
+    }
+  }
+
+  private async _openTerminalandInstall(command: string) {
+    try {
+      const terminal =
+        vscode.window.activeTerminal || vscode.window.createTerminal();
+      terminal.show();
+      if (terminal) {
+        terminal.sendText(command, true);
+        vscode.window.showInformationMessage(
+          'Terminal opened and command sent!',
+        );
+      }
+    } catch (error) {
+      console.error('Error opening terminal and sending command:', error);
+      vscode.window.showErrorMessage(
+        'Failed to open terminal and send command',
+      );
     }
   }
 
