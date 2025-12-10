@@ -36,14 +36,8 @@ function switchTab(tabName) {
     blocksTabContent.classList.remove('active');
     themesTabContent.classList.add('active');
 
-    console.log(
-      'themesInitialized:',
-      themesInitialized,
-      typeof window.initializeThemes === 'function',
-    );
     // Initialize themes on first switch to themes tab
     if (!themesInitialized) {
-      console.log('Initializing themes...');
       window.initializeThemes();
       themesInitialized = true;
     }
@@ -435,7 +429,6 @@ function renderSectionDetails(data, error) {
   if (!containerGrid) return;
 
   if (error) {
-    console.error('Error loading section details:', error);
     showErrorState(error);
     return;
   }
@@ -641,7 +634,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ? e.target
         : e.target.closest('.install-cmd-btn');
       const itemName = installBtn.dataset.item;
-      console.log('Item name for installation command:', itemName, CLIVersion);
       if (itemName) {
         const command =
           CLIVersion === 'cli-v3'
