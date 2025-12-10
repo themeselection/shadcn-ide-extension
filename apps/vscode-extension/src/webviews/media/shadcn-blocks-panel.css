@@ -198,6 +198,17 @@ body {
   display: none;
 }
 
+/* CLI Version Section */
+.cli-version-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--vscode-input-border, var(--vscode-contrastBorder, transparent));
+}
+
+.cli-version-section .cli-select {
+  width: 100%;
+}
+
 /* Main Tabs */
 .main-tabs {
   display: flex;

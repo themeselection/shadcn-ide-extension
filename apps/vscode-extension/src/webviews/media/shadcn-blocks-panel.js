@@ -499,13 +499,6 @@ function renderSectionDetailsFiltered() {
     </button>
     <div class="section-details-header">
       <h3 class="section-title">${escapeHtml(formateSectionName(currentSectionName) || 'Section Details')}</h3>
-      <div class="header-right">
-        <span class="block-count-badge">${items.length} blocks</span>
-        <select name="cliselect" id="cliSelector" class="cli-select">
-          <option value="cli-v3">CLI v3</option>
-          <option value="cli-v2">CLI v2</option>    
-        </select>
-      </div>
     </div>
     <div class="blocks-list">
       ${items
@@ -660,11 +653,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Event delegation for CLI version selector (handles dynamically created select)
-  document.addEventListener('change', (e) => {
-    if (e.target.id === 'cliSelector') {
+  const cliVersionSelector = document.getElementById('cliVersionSelector');
+  if (cliVersionSelector) {
+    cliVersionSelector.addEventListener('change', (e) => {
       CLIVersion = e.target.value;
-    }
-  });
+    });
+  }
 
   // License section toggle
   const licenseHeader = document.querySelector('.license-header');
