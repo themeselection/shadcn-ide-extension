@@ -72,7 +72,10 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
           await this._saveLicenseData(data.data);
           break;
         case 'openTerminalandInstall':
-          await this._openTerminalandInstall(data.command);
+          await this._openTerminalandInstall(data.command, data.cliVersion);
+          break;
+        case 'fetchThemesData':
+          await this._fetchThemesData();
           break;
       }
     });
@@ -129,13 +132,24 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
     }
   }
 
-  private async _openTerminalandInstall(command: string) {
+  private async _openTerminalandInstall(command: string, cliVersion: string) {
     try {
       const terminal =
         vscode.window.activeTerminal || vscode.window.createTerminal();
       terminal.show();
       if (terminal) {
-        terminal.sendText(command, true);
+        const email = vscode.workspace
+          .getConfiguration('shadcn')
+          .get<string>('licenseEmail', '');
+        const licenseKey = vscode.workspace
+          .getConfiguration('shadcn')
+          .get<string>('licenseKey', '');
+
+        const commandToSend =
+          cliVersion === 'cli-v3'
+            ? command
+            : command + `?email=${email}&licenseKey=${licenseKey}"`;
+        terminal.sendText(commandToSend, true);
         vscode.window.showInformationMessage(
           'Terminal opened and command sent!',
         );
@@ -155,6 +169,68 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
       vscode.env.openExternal(vscode.Uri.parse(previewUrl));
     } catch (_error) {
       vscode.window.showErrorMessage('Failed to open block preview');
+    }
+  }
+
+  private async _fetchThemesData() {
+    try {
+      // Show loading state
+      if (this._view) {
+        this._view.webview.postMessage({
+          type: 'themesDataLoading',
+          loading: true,
+        });
+      }
+
+      const themesUrl =
+        'https://shadcn-studio-internal-staging.vercel.app/r/themes/registry.json?is_extension=true';
+      // Fetch shadcn themes from the shadcn studio registry
+      const response = await fetch(themesUrl, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const themesData = await response.json();
+
+      // Send data to webview
+      if (this._view) {
+        this._view.webview.postMessage({
+          type: 'themesDataReceived',
+          data: (themesData as { items: string[]; name: string }).items,
+          loading: false,
+        });
+      }
+
+      vscode.window.showInformationMessage(
+        'Shadcn studio themes fetched successfully!',
+      );
+    } catch (error) {
+      console.error('Error fetching shadcn themes data:', error);
+
+      let errorMessage =
+        'Failed to fetch themes data from shadcn studio registry';
+      if (error instanceof Error) {
+        errorMessage = `Registry Error: ${error.message}`;
+      }
+
+      vscode.window.showErrorMessage(errorMessage);
+
+      // Hide loading state
+      if (this._view) {
+        this._view.webview.postMessage({
+          type: 'themesDataReceived',
+          data: null,
+          error: errorMessage,
+          loading: false,
+        });
+      }
     }
   }
 
@@ -469,6 +545,9 @@ Follow these instructions to integrate this block:
     const scriptUri = webview.asWebviewUri(
       vscode.Uri.joinPath(mediaPath, 'shadcn-blocks-panel.js'),
     );
+    const themesScriptUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(mediaPath, 'shadcn-themes-panel.js'),
+    );
 
     // Read HTML template
     const htmlPath = vscode.Uri.joinPath(mediaPath, 'shadcn-blocks-panel.html');
@@ -485,7 +564,8 @@ Follow these instructions to integrate this block:
     // Replace placeholders with actual URIs
     htmlContent = htmlContent
       .replace('{{styleUri}}', styleUri.toString())
-      .replace('{{scriptUri}}', scriptUri.toString());
+      .replace('{{scriptUri}}', scriptUri.toString())
+      .replace('{{themesScriptUri}}', themesScriptUri.toString());
 
     return htmlContent;
   }

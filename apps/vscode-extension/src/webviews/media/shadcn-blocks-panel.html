@@ -58,46 +58,101 @@
       </div>
 
       <div class="main-content">
-        <!-- Search and Filter -->
-        <div class="search-filter-container">
-          <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="searchInput"
-              placeholder="Search Shadcn Studio..." class="search-input" />
+        <!-- Main Tabs -->
+        <div class="main-tabs">
+          <button class="main-tab active" data-tab="blocks">
+            <span class="tab-icon">🧩</span>
+            <span>Blocks</span>
+          </button>
+          <button class="main-tab" data-tab="themes">
+            <span class="tab-icon">🎨</span>
+            <span>Themes</span>
+          </button>
+        </div>
+
+        <!-- Blocks Tab Content -->
+        <div id="blocksTabContent" class="tab-content active">
+          <!-- Search and Filter -->
+          <div class="search-filter-container">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="searchInput"
+                placeholder="Search Shadcn Studio..." class="search-input" />
+            </div>
           </div>
+
+          <!-- Loading State -->
+          <div id="loadingState" class="loading-state hidden">
+            <div class="spinner"></div>
+            <p>Loading blocks...</p>
+          </div>
+
+          <!-- Empty State -->
+          <div id="emptyState" class="empty-state">
+            <div class="empty-icon">📦</div>
+            <h3>No Sections found</h3>
+            <p>Click the button below to fetch Shadcn Studio blocks</p>
+            <button id="fetchSectionBtn" class="btn btn-primary btn-large">
+              <span class="icon">⬇️</span>
+              Fetch Sections
+            </button>
+          </div>
+
+          <!-- Error State -->
+          <div id="errorState" class="error-state hidden">
+            <div class="error-icon">⚠️</div>
+            <h3>Error Loading Blocks</h3>
+            <p id="errorMessage">Failed to load blocks from shadcn studio
+              registry
+            </p>
+            <button id="retryBtn" class="btn btn-secondary">
+              <span class="icon">↻</span>
+              Retry
+            </button>
+          </div>
+
+          <!-- Container Grid -->
+          <div id="containerGrid" class="container-grid hidden"></div>
         </div>
 
-        <!-- Loading State -->
-        <div id="loadingState" class="loading-state hidden">
-          <div class="spinner"></div>
-          <p>Loading blocks...</p>
-        </div>
+        <!-- Themes Tab Content -->
+        <div id="themesTabContent" class="tab-content">
+          <!-- Themes Search -->
+          <div class="search-filter-container">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="themesSearchInput"
+                placeholder="Search themes..." class="search-input" />
+            </div>
+          </div>
 
-        <!-- Empty State -->
-        <div id="emptyState" class="empty-state">
-          <div class="empty-icon">📦</div>
-          <h3>No Sections found</h3>
-          <p>Click the button below to fetch Shadcn Studio blocks</p>
-          <button id="fetchSectionBtn" class="btn btn-primary btn-large">
-            <span class="icon">⬇️</span>
-            Fetch Sections
-          </button>
-        </div>
+          <!-- Themes Loading State -->
+          <div id="themesLoadingState" class="loading-state hidden">
+            <div class="spinner"></div>
+            <p>Loading themes...</p>
+          </div>
 
-        <!-- Error State -->
-        <div id="errorState" class="error-state hidden">
-          <div class="error-icon">⚠️</div>
-          <h3>Error Loading Blocks</h3>
-          <p id="errorMessage">Failed to load blocks from shadcn studio registry
-          </p>
-          <button id="retryBtn" class="btn btn-secondary">
-            <span class="icon">↻</span>
-            Retry
-          </button>
-        </div>
+          <!-- Themes Empty State -->
+          <div id="themesEmptyState" class="empty-state hidden">
+            <div class="empty-icon">🎨</div>
+            <h3>No Themes Found</h3>
+            <p>Browse and apply beautiful themes to your project.</p>
+          </div>
 
-        <!-- Container Grid -->
-        <div id="containerGrid" class="container-grid hidden"></div>
+          <!-- Themes Error State -->
+          <div id="themesErrorState" class="error-state hidden">
+            <div class="error-icon">⚠️</div>
+            <h3>Error Loading Themes</h3>
+            <p id="themesErrorMessage">Failed to load themes</p>
+            <button id="themesRetryBtn" class="btn btn-secondary">
+              <span class="icon">↻</span>
+              Retry
+            </button>
+          </div>
+
+          <!-- Themes Grid -->
+          <div id="themesGrid" class="themes-grid hidden"></div>
+        </div>
 
       </div>
       <!-- Footer -->
@@ -111,6 +166,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
     <script src="{{scriptUri}}"></script>
+    <script src="{{themesScriptUri}}"></script>
   </body>
 
 </html>

@@ -11,6 +11,44 @@ let licenseData = { email: '', licenseKey: '' };
 let isInSectionDetails = false;
 let currentSectionItems = [];
 let CLIVersion = 'cli-v3';
+let themesInitialized = false; // Track if themes have been initialized
+
+// Tab switching function
+function switchTab(tabName) {
+  // Update tab buttons
+  const mainTabs = document.querySelectorAll('.main-tab');
+  mainTabs.forEach((tab) => {
+    if (tab.dataset.tab === tabName) {
+      tab.classList.add('active');
+    } else {
+      tab.classList.remove('active');
+    }
+  });
+
+  // Update tab contents
+  const blocksTabContent = document.getElementById('blocksTabContent');
+  const themesTabContent = document.getElementById('themesTabContent');
+
+  if (tabName === 'blocks') {
+    blocksTabContent.classList.add('active');
+    themesTabContent.classList.remove('active');
+  } else if (tabName === 'themes') {
+    blocksTabContent.classList.remove('active');
+    themesTabContent.classList.add('active');
+
+    console.log(
+      'themesInitialized:',
+      themesInitialized,
+      typeof window.initializeThemes === 'function',
+    );
+    // Initialize themes on first switch to themes tab
+    if (!themesInitialized) {
+      console.log('Initializing themes...');
+      window.initializeThemes();
+      themesInitialized = true;
+    }
+  }
+}
 
 // License management functions
 function initializeLicense() {
@@ -171,10 +209,11 @@ function copyInstallationCmd(command) {
   });
 }
 
-function installCmd(command) {
+function installCmd(command, CLIVersion) {
   vscode.postMessage({
     type: 'openTerminalandInstall',
     command,
+    cliVersion: CLIVersion,
   });
 }
 
@@ -554,6 +593,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize license data
   initializeLicense();
 
+  // Main tab switching
+  const mainTabs = document.querySelectorAll('.main-tab');
+  mainTabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const tabName = tab.dataset.tab;
+      if (tabName) {
+        switchTab(tabName);
+      }
+    });
+  });
+
   // Event delegation for buttons (handles dynamically created buttons)
   document.addEventListener('click', (e) => {
     // Handle copy command button
@@ -603,8 +653,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const command =
           CLIVersion === 'cli-v3'
             ? `npx shadcn@latest add @ss-blocks/${itemName}`
-            : `npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${itemName}"`;
-        installCmd(command);
+            : `npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${itemName}`;
+        installCmd(command, CLIVersion);
       }
     }
   });
@@ -731,3 +781,4 @@ window.previewBlock = previewBlock;
 window.fetchSectionsData = fetchSectionsData;
 window.saveLicense = saveLicense;
 window.toggleLicenseSection = toggleLicenseSection;
+window.switchTab = switchTab;
