@@ -99,26 +99,37 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
   private async _saveLicenseData(data: LicenseData) {
     try {
       const config = vscode.workspace.getConfiguration('shadcn');
-      await config.update(
-        'licenseEmail',
+
+      const isLicenseValid = await this._validateLicenseData(
         data.email,
-        vscode.ConfigurationTarget.Global,
-      );
-
-      await config.update(
-        'licenseKey',
         data.licenseKey,
-        vscode.ConfigurationTarget.Global,
       );
 
-      if (this._view) {
-        this._view.webview.postMessage({
-          type: 'licenseSaved',
-          success: true,
-        });
-      }
+      console.log('License validation result:', isLicenseValid);
 
-      vscode.window.showInformationMessage('License saved successfully!');
+      if (isLicenseValid) {
+        await config.update(
+          'licenseEmail',
+          data.email,
+          vscode.ConfigurationTarget.Global,
+        );
+
+        await config.update(
+          'licenseKey',
+          data.licenseKey,
+          vscode.ConfigurationTarget.Global,
+        );
+
+        if (this._view) {
+          this._view.webview.postMessage({
+            type: 'licenseSaved',
+            success: true,
+          });
+        }
+        vscode.window.showInformationMessage('License saved successfully!');
+      } else {
+        throw new Error('Invalid license data');
+      }
     } catch (error) {
       console.error('Error saving license data:', error);
       vscode.window.showErrorMessage('Failed to save license data');
@@ -159,6 +170,36 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
       vscode.window.showErrorMessage(
         'Failed to open terminal and send command',
       );
+    }
+  }
+
+  private async _validateLicenseData(
+    email: string,
+    licenseKey: string,
+  ): Promise<boolean> {
+    // Basic validation: check if email contains "@" and licenseKey is non-empty
+
+    try {
+      const validateLicenseDataUrl = `https://shadcn-studio-internal-staging.vercel.app/api/validate-user?email=${email}&license_key=${licenseKey}`;
+
+      const response = await fetch(validateLicenseDataUrl, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      } else {
+        const result = await response.json();
+        console.log('License validated:', result);
+        return true;
+      }
+    } catch (error) {
+      console.error('Error validating license data:', error);
+      return false;
     }
   }
 

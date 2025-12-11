@@ -68,7 +68,7 @@ function saveLicense() {
     data: licenseData,
   });
 
-  updateLicenseStatus(true);
+  // updateLicenseStatus(true);
 }
 
 function updateLicenseUI(data) {
