@@ -1,6 +1,6 @@
 {
-  "name": "flyonui-vscode-extension",
-  "displayName": "FlyonUI IDE Extension",
+  "name": "shadcn-vscode-extension",
+  "displayName": "Shadcn IDE Extension",
   "private": true,
   "description": "Edit Your UI With a Prompt.",
   "version": "1.0.3",
@@ -132,16 +132,17 @@
       }
     ]
   },
-  "homepage": "https://flyonui.com",
+  "homepage": "https://shadcnstudio.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/themeselection/flyonui-extension.git"
+    "url": "https://github.com/themeselection/shadcn-ide-extension"
   },
   "bugs": {
-    "url": "https://github.com/themeselection/flyonui-extension/issues"
+    "url": "https://github.com/themeselection/shadcn-ide-extension/issues"
   },
   "keywords": [
-    "flyonui",
+    "shadcn",
+    "ShadcnStudio",
     "ui",
     "components",
     "tailwindcss",

@@ -234,7 +234,7 @@ async function main() {
         typeof address === 'object' && address ? address.port : config.port;
       const serverUrl = `http://localhost:${port}`;
 
-      log.info(`✓ FlyonUI IDE Extension is running on ${serverUrl}`);
+      log.info(`✓  Shadcn IDE Extension is running on ${serverUrl}`);
       if (config.appPort) {
         log.info(`✓ Proxying app from port ${config.appPort}`);
       }
