@@ -203,18 +203,16 @@ function generateBlockContext(block: SelectedBlock, index: number): string {
 <block index="${index + 1}">
     <instructions>
       The user has selected the following UI components/blocks as reference for achieving their goal.
-      Use these components in the following ways:
-      1. INSPIRATION: Integrate the provided code in users codebase to achieve the user goal.
-      2. CODE REFERENCE: Extract and adapt the code from the component prompts to implement similar functionality
-      3. ADAPTIVE: The code attached here is in a HTML. If user is using any other framework, you should modify the code before applying.
-      4. BEST PRACTICES: Follow the coding patterns and conventions demonstrated in these components
-      IMPORTANT: The user's goal should be achieved by leveraging these selected components as building blocks.
+      Use the selected Components/blocks to best achieve the user's goal.
+      1. Install the block in the codebase using the provided installation command. ${block.installationCommand}
+      2. Once installed, refer to the user's project structure and integrate the block appropriately or as instructed by the user.
+      3. You can use this code as reference to adapt and implement similar functionality in the user's project.
+      4. Follow best practices and coding patterns demonstrated in these blocks.
     </instructions>
-  <path>${block.path}</path>
-  <title>${block.title}</title>
+  <path>${block.name}</path>
+  <title>${block.name}</title>
   <description>${block.description}</description>
-  <category>${block.category}</category>
-  ${block.content ? `<content>${block.content}</content>` : ''}
+  <installation_command>${block.installationCommand}</installation_command>
 </block>`.trim();
 }
 

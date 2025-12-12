@@ -54,9 +54,9 @@ export function ContextElementsChips() {
         {/* Blocks Chips */}
         {selectedBlocks.map((block) => (
           <BlocksChip
-            key={`blocks-${block.path}`}
+            key={`blocks-${block.name}`}
             block={block}
-            onDelete={() => removeChatBlocksContext(block.path)}
+            onDelete={() => removeChatBlocksContext(block.name)}
           />
         ))}
       </div>
@@ -171,7 +171,7 @@ function BlocksChip({ block, onDelete }: BlocksChipProps) {
       )}
     >
       <span className="max-w-24 truncate font-medium text-green-800 dark:text-green-200">
-        {block.title}
+        {block.name}
       </span>
       <button
         type="button"

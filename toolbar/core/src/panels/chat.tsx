@@ -224,10 +224,10 @@ export function ChatPanel() {
     (block: BlockItem) => {
       // Add block to chat context
       chatState.addChatBlocksContext({
-        path: block.path,
-        title: block.title,
+        name: block.name,
         description: block.description,
         category: block.category,
+        type: block.type,
       });
 
       // Clear the @blocks input and reset mode
@@ -420,14 +420,14 @@ export function ChatPanel() {
       className={cn(
         anyMessageInChat
           ? 'h-[35vh] max-h-[50vh] min-h-[20vh]'
-          : '!h-[calc-size(auto,size)] h-auto min-h-0',
+          : '!h-auto min-h-0',
       )}
     >
       <PanelHeader
         className={cn(
           'mb-0 origin-bottom transition-all duration-300 ease-out',
           agentState.state !== AgentStateType.IDLE
-            ? '!h-[calc-size(auto,size)] h-auto'
+            ? '!h-auto'
             : 'h-0 scale-x-75 scale-y-0 p-0 opacity-0 blur-md',
         )}
         title={
@@ -483,7 +483,7 @@ export function ChatPanel() {
       <PanelContent
         className={cn(
           'flex basis-[initial] flex-col gap-0 px-1 py-0',
-          anyMessageInChat ? '!h-[calc-size(auto,size)] h-auto flex-1' : 'h-0',
+          anyMessageInChat ? '!h-auto flex-1' : 'h-0',
           agentState.state === AgentStateType.IDLE
             ? 'rounded-t-[inherit]'
             : 'rounded-t-none',

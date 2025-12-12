@@ -191,7 +191,7 @@ export function LicenseKeyManager() {
                 Unlock Pro Features
               </h4>
               <p className="mt-1 text-muted-foreground text-xs">
-                Enter your license key or upgrade to access premium features
+                Add your credentials or upgrade to access premium features
               </p>
             </div>
 
@@ -202,7 +202,7 @@ export function LicenseKeyManager() {
                 onClick={() => setIsDialogOpen(true)}
                 className="flex-1 text-xs"
               >
-                Add License Key
+                Add Credentials
               </Button>
 
               <Button

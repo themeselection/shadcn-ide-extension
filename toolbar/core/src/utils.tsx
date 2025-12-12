@@ -469,57 +469,26 @@ export const getSelectedDocInfo = (doc: DocsContextItem): SelectedDoc => {
   };
 };
 
-// API utility function for FlyOnUI API calls
-const fetchBlockData = async (
-  path: string,
-  licenseKey: string | null,
-): Promise<string | null> => {
-  try {
-    const url = `https://flyonui.com/api/mcp${path}?type=mcp`;
-
-    const headers: Record<string, string> = {
-      Accept: '*/*',
-      'Content-Type': 'application/json',
-    };
-
-    if (licenseKey) {
-      headers['x-license-key'] = licenseKey;
-    }
-
-    const response = await fetch(url, {
-      method: 'GET',
-      headers,
-    });
-
-    if (!response.ok) {
-      console.warn(
-        `API call failed for path ${path}: ${response.status} ${response.statusText}`,
-      );
-      return null;
-    }
-
-    const data = await response.text();
-    return data;
-  } catch (error) {
-    console.error(`Error making API call for path ${path}:`, error);
-    return null;
-  }
-};
-
-export const getSelectedBlockInfo = async (
+export const getSelectedBlockInfo = (
   block: BlocksContextItem,
-  licenseKey: string | null = null,
-): Promise<SelectedBlock> => {
-  // Make API call to get the content
-  const apiContent = await fetchBlockData(block.path, licenseKey);
+): SelectedBlock => {
+  const blockInstallationCmd = `npx shadcn@latest add @ss-blocks/${block.name}`;
 
   return {
-    path: truncateString(block.path, 1024),
-    title: truncateString(block.title, 512),
-    description: truncateString(block.description, 2048),
-    category: block.category,
-    content: apiContent ? apiContent : undefined,
+    name: block.name,
+    description: block.description,
+    installationCommand: blockInstallationCmd,
   };
+  // Make API call to get the content
+  // const apiContent = await fetchBlockData(block.path, licenseKey);
+
+  // return {
+  //   path: truncateString(block.path, 1024),
+  //   title: truncateString(block.title, 512),
+  //   description: truncateString(block.description, 2048),
+  //   category: block.category,
+  //   content: apiContent ? apiContent : undefined,
+  // };
 };
 
 export const collectUserMessageMetadata = (

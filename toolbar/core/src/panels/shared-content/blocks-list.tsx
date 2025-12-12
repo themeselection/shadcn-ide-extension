@@ -44,7 +44,7 @@ const addToRecentBlocks = (item: BlockItem) => {
   try {
     const recent = getRecentBlocks();
     // Remove if already exists
-    const filtered = recent.filter((block) => block.path !== item.path);
+    const filtered = recent.filter((block) => block.name !== item.name);
     // Add to beginning with recent category
     const updatedRecent = [
       { ...item, category: 'recent' as const },
@@ -78,39 +78,15 @@ export const BlocksList = forwardRef<BlocksListRef, BlocksListProps>(
 
     // Popular blocks (can be expanded based on usage patterns)
     const POPULAR_BLOCKS: BlockItem[] = [
-      {
-        path: '/marketing-ui/about-us/about-us-1',
-        title: 'About Us 1',
-        description:
-          "A vertical 'About Us' section featuring a centered headline, a descriptive paragraph about teamwork and success, a prominent purple call-to-action button labeled 'Read More', and a wide image of a diverse team meeting in a modern conference room placed below the text.",
-        category: 'popular',
-        name: 'About Us 1',
-      },
-      {
-        path: '/marketing-ui/hero/hero-1',
-        title: 'Hero 1',
-        description:
-          'A food-themed hero section with navigation bar, compelling headline with decorative underline, descriptive text, and call-to-action button over a high-quality food image background.',
-        category: 'popular',
-        name: 'Hero 1',
-      },
-      {
-        path: '/marketing-ui/contact-us/contact-us-1',
-        title: 'Contact Us 1',
-        description:
-          "This 'Contact Us' section includes contact details like office hours, address, and phone numbers. The section also features a brief introduction about the company's offerings and a supportive image. It includes icons for office hours, address, additional office locations, and contact information, making it easy for users to get in touch with the team.",
-        category: 'popular',
-        name: 'Contact Us 1',
-      },
       // Add more popular blocks as needed
     ];
 
     // Combine popular and recent blocks for local search
     const localBlocks = useMemo(() => {
       // Recent blocks first, then popular (excluding duplicates)
-      const recentPaths = new Set(recentBlocks.map((block) => block.path));
+      const recentPaths = new Set(recentBlocks.map((block) => block.name));
       const popularFiltered = POPULAR_BLOCKS.filter(
-        (block) => !recentPaths.has(block.path),
+        (block) => !recentPaths.has(block.name),
       );
       return [...recentBlocks, ...popularFiltered];
     }, [recentBlocks]);
@@ -119,7 +95,7 @@ export const BlocksList = forwardRef<BlocksListRef, BlocksListProps>(
     const { searchResults, isSearching, searchError } = useBlockSearch(
       searchQuery || '',
       localBlocks,
-      { licenseKey },
+      { licenseKey, debounceMs: 500 },
     );
 
     // Use search results from API if searching, otherwise use local blocks
@@ -386,8 +362,8 @@ export const BlocksList = forwardRef<BlocksListRef, BlocksListProps>(
         {activeBlock && (
           <div className="flex items-center justify-center rounded-lg">
             <img
-              src={`https://cdn.flyonui.com/fy-assets/extension${activeBlock.path}.png?format=auto`}
-              alt={activeBlock.title}
+              src={`https://cdn.flyonui.com/fy-assets/extension${activeBlock.name}.png?format=auto`}
+              alt={activeBlock.name}
               className="size-full rounded-lg border border-border object-contain shadow-md"
             />
           </div>
@@ -438,7 +414,7 @@ export const BlocksList = forwardRef<BlocksListRef, BlocksListProps>(
               const isItemFocused = activeIndex === startIndex + idx;
               return (
                 <button
-                  key={block.path}
+                  key={block.name}
                   type="button"
                   className={cn(
                     'flex w-full items-center gap-2 rounded-md border p-2 text-left text-xs transition-colors',
@@ -449,7 +425,12 @@ export const BlocksList = forwardRef<BlocksListRef, BlocksListProps>(
                   onClick={() => handleBlockSelection(block)}
                 >
                   <span className="truncate font-medium text-foreground">
-                    {block.title}
+                    {block.name
+                      .split('-')
+                      .map(
+                        (word) => word.charAt(0).toUpperCase() + word.slice(1),
+                      )
+                      .join(' ')}
                   </span>
                   {block.category === 'recent' && !searchQuery?.trim() && (
                     <span className="ml-auto rounded-full bg-blue-100 px-1.5 py-0.5 font-medium text-blue-800 text-xs dark:bg-blue-900 dark:text-blue-300">

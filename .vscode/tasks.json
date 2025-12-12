@@ -9,7 +9,7 @@
         "run",
         "build",
         "--filter",
-        "flyonui-vscode-extension",
+        "shadcn-vscode-extension",
         "--force"
       ],
       "group": "build",

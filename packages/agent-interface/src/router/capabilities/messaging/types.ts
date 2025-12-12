@@ -143,17 +143,11 @@ export type SelectedDoc = z.infer<typeof selectedDocSchema>;
 
 /** Information about a selected code block */
 export const selectedBlockSchema = z.object({
-  path: z.string().min(1).max(1024).describe('The file path of the block.'),
-  title: z.string().min(1).max(512).describe('The title of the block.'),
+  name: z.string().min(1).max(1024).describe('The name of the block.'),
   description: z.string().max(2048).describe('The description of the block.'),
-  category: z
-    .enum(['popular', 'recent'])
-    .describe('The category of the block.'),
-  content: z
+  installationCommand: z
     .string()
-    .max(32768)
-    .optional()
-    .describe('The actual content of the block if available.'),
+    .describe('The installation command for the block.'),
 });
 
 export type SelectedBlock = z.infer<typeof selectedBlockSchema>;

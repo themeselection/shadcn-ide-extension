@@ -80,5 +80,8 @@
     "vite-plugin-css-injected-by-js": "^3.5.2",
     "vite-plugin-dts": "^4.5.4",
     "zod": "3.25.76"
+  },
+  "dependencies": {
+    "fuse.js": "^7.1.0"
   }
 }

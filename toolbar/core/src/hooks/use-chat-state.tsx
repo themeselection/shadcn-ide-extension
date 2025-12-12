@@ -21,7 +21,6 @@ import {
 import { useAgentMessaging } from './agent/use-agent-messaging';
 import { useAgentState } from './agent/use-agent-state';
 import { useAppState } from './use-app-state';
-import { useLicenseKey } from './use-license-key';
 import { usePanels } from './use-panels';
 import { usePlugins } from './use-plugins';
 
@@ -44,10 +43,10 @@ export interface DocsContextItem {
 }
 
 export interface BlocksContextItem {
-  path: string;
-  title: string;
+  name: string;
   description: string;
-  category: 'popular' | 'recent';
+  category?: 'popular' | 'recent';
+  type?: string;
 }
 
 interface ChatContext {
@@ -126,7 +125,6 @@ export const ChatStateProvider = ({ children }: ChatStateProviderProps) => {
   const { sendMessage: sendAgentMessage } = useAgentMessaging();
   const { isChatOpen } = usePanels();
   const agentState = useAgentState();
-  const { licenseKey } = useLicenseKey();
   const { promptAction } = useAppState();
 
   const startPromptCreation = useCallback(() => {
@@ -219,7 +217,7 @@ export const ChatStateProvider = ({ children }: ChatStateProviderProps) => {
     setSelectedBlocks((prev) => {
       // Check if block already exists
       const exists = prev.some(
-        (existingBlock) => existingBlock.path === block.path,
+        (existingBlock) => existingBlock.name === block.name,
       );
       if (exists) return prev;
       return [...prev, block];
@@ -228,7 +226,7 @@ export const ChatStateProvider = ({ children }: ChatStateProviderProps) => {
 
   const removeChatBlocksContext = useCallback((blockPath: string) => {
     setSelectedBlocks((prev) =>
-      prev.filter((block) => block.path !== blockPath),
+      prev.filter((block) => block.name !== blockPath),
     );
   }, []);
 
@@ -247,7 +245,7 @@ export const ChatStateProvider = ({ children }: ChatStateProviderProps) => {
         getSelectedDocInfo(doc),
       );
       const selectedBlocksInfo = await Promise.all(
-        selectedBlocks.map((block) => getSelectedBlockInfo(block, licenseKey)),
+        selectedBlocks.map((block) => getSelectedBlockInfo(block)),
       );
 
       const metadata = collectUserMessageMetadata(
