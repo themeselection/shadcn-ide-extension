@@ -150,9 +150,43 @@ function renderThemes() {
     return;
   }
 
-  themesGrid.innerHTML = filteredThemes
-    .map((theme) => createThemeCardHtml(theme))
-    .join('');
+  // Group themes by type
+  const userThemes = filteredThemes.filter((t) => t.type === 'user');
+  const genericThemes = filteredThemes.filter((t) => t.type === 'generic');
+
+  let html = '';
+
+  // Render user themes section if exists
+  if (userThemes.length > 0) {
+    html += `
+      <div class="theme-section-separator" style="grid-column: 1 / -1;">
+        <div class="separator-content">
+          <span class="separator-icon">⭐</span>
+          <h3 class="separator-title">Your Custom Themes</h3>
+          <span class="separator-count">(${userThemes.length})</span>
+        </div>
+        <div class="separator-line"></div>
+      </div>
+    `;
+    html += userThemes.map((theme) => createThemeCardHtml(theme)).join('');
+  }
+
+  // Render generic themes section
+  if (genericThemes.length > 0) {
+    html += `
+      <div class="theme-section-separator" style="grid-column: 1 / -1;">
+        <div class="separator-content">
+          <span class="separator-icon">🌐</span>
+          <h3 class="separator-title">ShadcnStudio Themes</h3>
+          <span class="separator-count">(${genericThemes.length})</span>
+        </div>
+        <div class="separator-line"></div>
+      </div>
+    `;
+    html += genericThemes.map((theme) => createThemeCardHtml(theme)).join('');
+  }
+
+  themesGrid.innerHTML = html;
 }
 
 // Extract preview colors from theme cssVars

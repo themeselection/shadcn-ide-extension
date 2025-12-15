@@ -182,7 +182,7 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
     // Basic validation: check if email contains "@" and licenseKey is non-empty
 
     try {
-      const validateLicenseDataUrl = `https://shadcn-studio-internal-staging.vercel.app/api/validate-user?email=${email}&license_key=${licenseKey}`;
+      const validateLicenseDataUrl = `https://shadcnstudio.com/api/validate-user?email=${email}&license_key=${licenseKey}`;
 
       const response = await fetch(validateLicenseDataUrl, {
         method: 'GET',
@@ -215,16 +215,8 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
     }
   }
 
-  private async _fetchThemesData() {
+  private async _fetchGenericThemes() {
     try {
-      // Show loading state
-      if (this._view) {
-        this._view.webview.postMessage({
-          type: 'themesDataLoading',
-          loading: true,
-        });
-      }
-
       const themesUrl =
         'https://shadcnstudio.com/r/themes/registry.json?is_extension=true';
       // Fetch shadcn themes from the shadcn studio registry
@@ -240,7 +232,85 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const themesData = await response.json();
+      const shadcnThemesData = await response.json();
+      console.log('Generic themes data:', shadcnThemesData);
+
+      const shadcnThemesDataItems = (
+        shadcnThemesData as { items: any[]; name: string }
+      ).items.map((item) => {
+        return {
+          ...item,
+          type: 'generic',
+        };
+      });
+
+      return shadcnThemesDataItems;
+    } catch (error) {
+      console.error('Error fetching ShadcnStudio themes:', error);
+      return null;
+    }
+  }
+
+  private async _fetchUserThemes() {
+    try {
+      const { email, licenseKey } = this._getUserConfig();
+
+      const themesUrl = `https://shadcnstudio.com/api/user-themes?email=${email}&license_key=${licenseKey}&is_extension=true`;
+      console.log('Fetching user themes from URL:', themesUrl);
+      // Fetch shadcn themes from the shadcn studio registry
+      const response = await fetch(themesUrl, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const userThemesData = await response.json();
+
+      const userThemesDataItems = (
+        userThemesData as {
+          themes: { name: string; cssVars?: Record<string, string> }[];
+        }
+      ).themes.map((item) => {
+        return {
+          ...item,
+          type: 'user',
+        };
+      });
+
+      return userThemesDataItems;
+    } catch (error) {
+      console.error('Error fetching user-specific ShadcnStudio themes:', error);
+      return null;
+    }
+  }
+
+  private async _fetchThemesData() {
+    try {
+      // Show loading state
+      if (this._view) {
+        this._view.webview.postMessage({
+          type: 'themesDataLoading',
+          loading: true,
+        });
+      }
+
+      // Fetch both generic and user-specific themes
+      const genericThemes = await this._fetchGenericThemes();
+      const userThemes = await this._fetchUserThemes();
+
+      // Combine themes, prioritizing user-specific themes
+      const themesData = {
+        items: [...(userThemes || []), ...(genericThemes || [])],
+        name: 'All Themes',
+      };
+
+      console.log('Combined themes data:', themesData);
 
       // Send data to webview
       if (this._view) {
