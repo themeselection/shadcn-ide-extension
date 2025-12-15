@@ -81,12 +81,19 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
     });
   }
 
+  private _getUserConfig = () => {
+    const email = vscode.workspace
+      .getConfiguration('shadcn')
+      .get<string>('licenseEmail', '');
+    const licenseKey = vscode.workspace
+      .getConfiguration('shadcn')
+      .get<string>('licenseKey', '');
+
+    return { email, licenseKey };
+  };
+
   private async _sendLicenseData() {
-    const config = vscode.workspace.getConfiguration('shadcn');
-    const licenseData: LicenseData = {
-      email: config.get<string>('licenseEmail', ''),
-      licenseKey: config.get<string>('licenseKey', ''),
-    };
+    const licenseData: LicenseData = this._getUserConfig();
 
     if (this._view) {
       this._view.webview.postMessage({
@@ -149,12 +156,7 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
         vscode.window.activeTerminal || vscode.window.createTerminal();
       terminal.show();
       if (terminal) {
-        const email = vscode.workspace
-          .getConfiguration('shadcn')
-          .get<string>('licenseEmail', '');
-        const licenseKey = vscode.workspace
-          .getConfiguration('shadcn')
-          .get<string>('licenseKey', '');
+        const { email, licenseKey } = this._getUserConfig();
 
         const commandToSend =
           cliVersion === 'cli-v3'
@@ -224,7 +226,7 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
       }
 
       const themesUrl =
-        'https://shadcn-studio-internal-staging.vercel.app/r/themes/registry.json?is_extension=true';
+        'https://shadcnstudio.com/r/themes/registry.json?is_extension=true';
       // Fetch shadcn themes from the shadcn studio registry
       const response = await fetch(themesUrl, {
         method: 'GET',
