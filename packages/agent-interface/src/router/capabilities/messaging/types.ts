@@ -152,6 +152,15 @@ export const selectedBlockSchema = z.object({
 
 export type SelectedBlock = z.infer<typeof selectedBlockSchema>;
 
+export const selectedThemeSchema = z.object({
+  name: z.string().min(1).max(1024).describe('The name of the theme.'),
+  installationCommand: z
+    .string()
+    .describe('The installation command for the theme.'),
+});
+
+export type SelectedTheme = z.infer<typeof selectedThemeSchema>;
+
 /** Enum for prompt action types */
 export const promptActionSchema = z
   .enum(['copy', 'send', 'both'])

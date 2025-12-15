@@ -2,6 +2,7 @@ import {
   useChatState,
   type BlocksContextItem,
   type DocsContextItem,
+  type ThemeContextItem,
 } from '@/hooks/use-chat-state';
 import { useContextChipHover } from '@/hooks/use-context-chip-hover';
 import { cn } from '@/utils';
@@ -14,6 +15,8 @@ export function ContextElementsChips() {
     removeChatDomContext,
     selectedDocs,
     selectedBlocks,
+    selectedThemes,
+    removeChatThemeContext,
     removeChatDocsContext,
     removeChatBlocksContext,
   } = useChatState();
@@ -22,7 +25,8 @@ export function ContextElementsChips() {
   if (
     domContextElements.length === 0 &&
     selectedDocs.length === 0 &&
-    selectedBlocks.length === 0
+    selectedBlocks.length === 0 &&
+    selectedThemes.length === 0
   ) {
     return null;
   }
@@ -57,6 +61,15 @@ export function ContextElementsChips() {
             key={`blocks-${block.name}`}
             block={block}
             onDelete={() => removeChatBlocksContext(block.name)}
+          />
+        ))}
+
+        {/* Themes Chips */}
+        {selectedThemes.map((theme) => (
+          <ThemeChip
+            key={`themes-${theme.name}`}
+            theme={theme}
+            onDelete={() => removeChatThemeContext(theme.name)}
           />
         ))}
       </div>
@@ -180,6 +193,37 @@ function BlocksChip({ block, onDelete }: BlocksChipProps) {
           onDelete();
         }}
         className="text-green-500 transition-colors hover:text-red-500 dark:text-green-400"
+      >
+        <XIcon className="size-3" />
+      </button>
+    </button>
+  );
+}
+
+interface ThemeChipProps {
+  theme: ThemeContextItem;
+  onDelete: () => void;
+}
+
+function ThemeChip({ theme, onDelete }: ThemeChipProps) {
+  return (
+    <button
+      type="button"
+      tabIndex={-1}
+      className={cn(
+        'flex min-w-fit shrink-0 items-center gap-1 rounded-lg border border-purple-200/40 bg-purple-50/50 px-2 py-1 text-xs transition-all hover:border-purple-300/60 hover:bg-purple-100/70 dark:border-purple-800/40 dark:bg-purple-950/50 dark:hover:border-purple-700/60 dark:hover:bg-purple-900/70',
+      )}
+    >
+      <span className="max-w-24 truncate font-medium text-purple-800 dark:text-purple-200">
+        {theme.name}
+      </span>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete();
+        }}
+        className="text-purple-500 transition-colors hover:text-red-500 dark:text-purple-400"
       >
         <XIcon className="size-3" />
       </button>

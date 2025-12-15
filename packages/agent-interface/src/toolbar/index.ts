@@ -21,6 +21,7 @@ export {
   type SelectedBlock,
   type SelectedDoc,
   type SelectedElement,
+  type SelectedTheme,
   type UserMessage,
   type UserMessageContentItem,
   type UserMessageMetadata,

@@ -1,18 +1,18 @@
 import { cn } from '@/utils';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Context7Logo } from './context7-logo';
-import { FlyonUILogo } from './flyonui-logo';
+import { Logo as ShadcnStudioLogo } from './shadcn-studio-logo';
 
 interface AtMenuProps {
-  onSelect: (type: 'docs' | 'blocks' | 'flyonui-docs') => void;
+  onSelect: (type: 'docs' | 'blocks' | 'shadcn-studio-docs' | 'themes') => void;
   onFocusReturn?: () => void;
   searchQuery?: string;
 }
 
 const options: Array<{
-  type: 'docs' | 'blocks' | 'flyonui-docs';
+  type: 'docs' | 'blocks' | 'shadcn-studio-docs' | 'themes';
   label: string;
-  Icon: 'Context7Logo' | 'SVGLLogo' | null;
+  Icon: 'Context7Logo' | 'ShadcnStudioLogo' | null;
 }> = [
   {
     type: 'docs',
@@ -20,14 +20,19 @@ const options: Array<{
     Icon: 'Context7Logo',
   },
   {
-    type: 'flyonui-docs',
-    label: 'FlyonUI Docs',
-    Icon: 'SVGLLogo',
+    type: 'shadcn-studio-docs',
+    label: 'ShadcnStudio Docs',
+    Icon: 'ShadcnStudioLogo',
   },
   {
     type: 'blocks',
-    label: 'FlyonUI Blocks',
-    Icon: 'SVGLLogo',
+    label: 'ShadcnStudio Blocks',
+    Icon: 'ShadcnStudioLogo',
+  },
+  {
+    type: 'themes',
+    label: 'ShadcnStudio Themes',
+    Icon: 'ShadcnStudioLogo',
   },
 ];
 
@@ -58,7 +63,7 @@ export function AtMenu({ onSelect, onFocusReturn, searchQuery }: AtMenuProps) {
   }, [filteredOptions.length]);
 
   const handleClick = useCallback(
-    (type: 'docs' | 'blocks' | 'flyonui-docs') => {
+    (type: 'docs' | 'blocks' | 'shadcn-studio-docs' | 'themes') => {
       onSelect(type);
     },
     [onSelect],
@@ -139,7 +144,7 @@ export function AtMenu({ onSelect, onFocusReturn, searchQuery }: AtMenuProps) {
           {Icon === 'Context7Logo' ? (
             <Context7Logo className="h-4 w-4" />
           ) : (
-            <FlyonUILogo
+            <ShadcnStudioLogo
               className={cn(
                 'h-4 w-4',
                 index === activeIndex

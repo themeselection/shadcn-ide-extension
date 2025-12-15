@@ -4,6 +4,7 @@ import {
   getSelectedBlockInfo,
   getSelectedDocInfo,
   getSelectedElementInfo,
+  getSelectedThemeInfo,
 } from '@/utils';
 import type {
   UserMessage,
@@ -49,6 +50,11 @@ export interface BlocksContextItem {
   type?: string;
 }
 
+export interface ThemeContextItem {
+  name: string;
+  type?: string;
+}
+
 interface ChatContext {
   // Chat content operations
   chatInput: string;
@@ -65,12 +71,14 @@ interface ChatContext {
 
   // Docs and blocks context
   selectedDocs: DocsContextItem[];
+  selectedThemes: ThemeContextItem[];
   selectedBlocks: BlocksContextItem[];
   addChatDocsContext: (doc: DocsContextItem) => void;
   removeChatDocsContext: (docId: string) => void;
   addChatBlocksContext: (block: BlocksContextItem) => void;
+  addChatThemesContext: (theme: ThemeContextItem) => void;
   removeChatBlocksContext: (blockPath: string) => void;
-
+  removeChatThemeContext: (themeName: string) => void;
   sendMessage: () => void;
 
   // UI state
@@ -88,10 +96,13 @@ const ChatContext = createContext<ChatContext>({
   removeChatDomContext: () => {},
   selectedDocs: [],
   selectedBlocks: [],
+  selectedThemes: [],
   addChatDocsContext: () => {},
   removeChatDocsContext: () => {},
   addChatBlocksContext: () => {},
+  addChatThemesContext: () => {},
   removeChatBlocksContext: () => {},
+  removeChatThemeContext: () => {},
   sendMessage: () => {},
   isPromptCreationActive: false,
   startPromptCreation: () => {},
@@ -119,6 +130,7 @@ export const ChatStateProvider = ({ children }: ChatStateProviderProps) => {
   >([]);
   const [selectedDocs, setSelectedDocs] = useState<DocsContextItem[]>([]);
   const [selectedBlocks, setSelectedBlocks] = useState<BlocksContextItem[]>([]);
+  const [selectedThemes, setSelectedThemes] = useState<ThemeContextItem[]>([]);
 
   const { minimized } = useAppState();
   const { plugins } = usePlugins();
@@ -224,9 +236,26 @@ export const ChatStateProvider = ({ children }: ChatStateProviderProps) => {
     });
   }, []);
 
+  const addChatThemesContext = useCallback((theme: ThemeContextItem) => {
+    setSelectedThemes((prev) => {
+      // Check if theme already exists
+      const exists = prev.some(
+        (existingTheme) => existingTheme.name === theme.name,
+      );
+      if (exists) return prev;
+      return [...prev, theme];
+    });
+  }, []);
+
   const removeChatBlocksContext = useCallback((blockPath: string) => {
     setSelectedBlocks((prev) =>
       prev.filter((block) => block.name !== blockPath),
+    );
+  }, []);
+
+  const removeChatThemeContext = useCallback((themeName: string) => {
+    setSelectedThemes((prev) =>
+      prev.filter((theme) => theme.name !== themeName),
     );
   }, []);
 
@@ -247,11 +276,15 @@ export const ChatStateProvider = ({ children }: ChatStateProviderProps) => {
       const selectedBlocksInfo = await Promise.all(
         selectedBlocks.map((block) => getSelectedBlockInfo(block)),
       );
+      const selectedThemesInfo = selectedThemes.map((theme) =>
+        getSelectedThemeInfo(theme),
+      );
 
       const metadata = collectUserMessageMetadata(
         selectedElementsInfo,
         selectedDocsInfo,
         selectedBlocksInfo,
+        selectedThemesInfo,
         promptAction,
       );
 
@@ -348,10 +381,13 @@ export const ChatStateProvider = ({ children }: ChatStateProviderProps) => {
     removeChatDomContext,
     selectedDocs,
     selectedBlocks,
+    selectedThemes,
     addChatDocsContext,
     removeChatDocsContext,
     addChatBlocksContext,
+    addChatThemesContext,
     removeChatBlocksContext,
+    removeChatThemeContext,
     sendMessage,
     isPromptCreationActive: isPromptCreationMode,
     startPromptCreation,

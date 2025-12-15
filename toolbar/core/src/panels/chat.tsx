@@ -32,6 +32,8 @@ import type { BlockItem, BlocksListRef } from './shared-content/blocks-list';
 import { BlocksList } from './shared-content/blocks-list';
 import type { DocsItem, DocsListRef } from './shared-content/docs-list';
 import { DocsList } from './shared-content/docs-list';
+import type { ThemeItem, ThemesListRef } from './shared-content/themes-list';
+import { ThemesList } from './shared-content/themes-list';
 
 const agentStateToText: Record<AgentStateType, string> = {
   [AgentStateType.WAITING_FOR_USER_RESPONSE]: 'Waiting for user response',
@@ -78,8 +80,15 @@ export function ChatPanel() {
   const [isBlocksFocused, setIsBlocksFocused] = useState(false);
   const blocksListRef = useRef<BlocksListRef>(null);
 
+  // For Themes State
+  const [isThemesActivated, setIsThemesActivated] = useState(false);
+  const [isThemesFocused, setIsThemesFocused] = useState(false);
+  const themesListRef = useRef<ThemesListRef>(null);
+
   // @ mention mode state (docs, blocks, etc.)
-  const [atMode, setAtMode] = useState<'docs' | 'blocks' | null>(null);
+  const [atMode, setAtMode] = useState<'docs' | 'blocks' | 'themes' | null>(
+    null,
+  );
 
   // Extract search query from @ input
   const atSearchQuery = useMemo(() => {
@@ -89,9 +98,9 @@ export function ChatPanel() {
 
   // Handle @ menu selection
   const handleAtMenuSelect = useCallback(
-    (type: 'docs' | 'blocks' | 'flyonui-docs') => {
-      // Handle direct FlyonUI docs selection
-      if (type === 'flyonui-docs') {
+    (type: 'docs' | 'blocks' | 'shadcn-studio-docs' | 'themes') => {
+      // Handle direct ShadcnStudio docs selection
+      if (type === 'shadcn-studio-docs') {
         // Directly add FlyonUI docs to context
         const flyonUIDoc: DocsItem = {
           id: '/themeselection/flyonui-docs',
@@ -127,6 +136,8 @@ export function ChatPanel() {
         setIsDocsActivated(true);
       } else if (type === 'blocks') {
         setIsBlocksActivated(true);
+      } else if (type === 'themes') {
+        setIsThemesActivated(true);
       }
     },
     [chatState],
@@ -146,6 +157,13 @@ export function ChatPanel() {
     return result;
   }, [atMode, chatState.chatInput]);
 
+  // Show themes Search when @mode is themes
+  const shouldShowThemes = useMemo(() => {
+    const result =
+      atMode === 'themes' && chatState.chatInput.trim().startsWith('@');
+    return result;
+  }, [atMode, chatState.chatInput]);
+
   // Auto-focus on docs when they become visible
   useEffect(() => {
     if (shouldShowDocs && isDocsActivated) {
@@ -159,6 +177,12 @@ export function ChatPanel() {
       blocksListRef.current?.focusOnBlocks();
     }
   }, [shouldShowBlocks, isBlocksActivated]);
+
+  useEffect(() => {
+    if (shouldShowThemes && isThemesActivated) {
+      themesListRef.current?.focusOnThemes();
+    }
+  }, [shouldShowThemes, isThemesActivated]);
 
   // Reset readiness when docs hidden or disabled
   useEffect(() => {
@@ -200,6 +224,17 @@ export function ChatPanel() {
     return '';
   }, [shouldShowBlocks, chatState.chatInput]);
 
+  const themesSearchQuery = useMemo(() => {
+    if (!shouldShowThemes) return '';
+    const input = chatState.chatInput.trim();
+    if (input.startsWith('@themes ')) {
+      return input.slice(8).trim();
+    } else if (input === '@themes') {
+      return '';
+    }
+    return '';
+  }, [shouldShowThemes, chatState.chatInput]);
+
   const handleDocSelection = useCallback(
     (doc: DocsItem) => {
       // Add doc to chat context
@@ -238,6 +273,22 @@ export function ChatPanel() {
     [chatState],
   );
 
+  const handleThemeSelection = useCallback(
+    (theme: ThemeItem) => {
+      chatState.addChatThemesContext({
+        name: theme.name,
+        type: theme.type,
+      });
+
+      console.log('added to chat state context', theme.name);
+
+      // Clear the @themes input and reset mode
+      chatState.setChatInput('');
+      setAtMode(null);
+      setIsThemesActivated(false);
+    },
+    [chatState],
+  );
   // Handle @ menu focus return
   const handleAtMenuFocusReturn = useCallback(() => {
     inputRef.current?.focus();
@@ -293,8 +344,10 @@ export function ChatPanel() {
       input.startsWith('@') &&
       !input.startsWith('@docs ') &&
       !input.startsWith('@blocks ') &&
+      !input.startsWith('@themes ') &&
       input !== '@docs' &&
       input !== '@blocks' &&
+      input !== '@themes' &&
       enableInputField && // Check if input is enabled instead of prompt creation mode
       atMode === null;
     return result;
@@ -333,10 +386,20 @@ export function ChatPanel() {
       }
     }
 
+    if (themesListRef.current && (isThemesActivated || isThemesFocused)) {
+      if (isThemesActivated && !isThemesFocused) {
+        themesListRef.current.focusOnThemes();
+      }
+      const success = themesListRef.current.selectActiveTheme();
+      if (success) {
+        setTimeout(() => handleFocusReturn(), 100);
+        return;
+      }
+    }
+
     chatState.sendMessage();
     chatState.stopPromptCreation();
-  }, [chatState, isDocsFocused, isBlocksFocused]);
-
+  }, [chatState, isDocsFocused, isBlocksFocused, isThemesFocused]);
   const handleKeyDown = useCallback(
     async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
@@ -355,6 +418,11 @@ export function ChatPanel() {
         if (shouldShowBlocks && isBlocksActivated && !isBlocksFocused) {
           e.preventDefault();
           blocksListRef.current?.focusOnBlocks();
+        }
+        // CRITICAL: Re-activate themes focus when arrow keys are pressed and themes are visible
+        if (shouldShowThemes && isThemesActivated && !isThemesFocused) {
+          e.preventDefault();
+          themesListRef.current?.focusOnThemes();
         }
       }
     },
@@ -400,12 +468,24 @@ export function ChatPanel() {
     }, 100);
   }, []);
 
+  const handleCloseThemes = useCallback(() => {
+    setIsThemesFocused(false);
+    setIsThemesActivated(false);
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
+  }, []);
+
   const handleDocsFocusChange = useCallback((isFocused: boolean) => {
     setIsDocsFocused(isFocused);
   }, []);
 
   const handleBlocksFocusChange = useCallback((isFocused: boolean) => {
     setIsBlocksFocused(isFocused);
+  }, []);
+
+  const handleThemesFocusChange = useCallback((isFocused: boolean) => {
+    setIsThemesFocused(isFocused);
   }, []);
 
   /* If the user clicks on prompt creation mode, we force-focus the input field all the time. */
@@ -603,6 +683,33 @@ export function ChatPanel() {
                   onCloseBlocks={handleCloseBlocks}
                   onReady={() => {
                     /* blocks ready */
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Themes List - positioned above chat input */}
+            {shouldShowThemes && isThemesActivated && (
+              <div
+                className={cn(
+                  'absolute right-0 bottom-full left-0 z-50',
+                  // Adjust margin based on whether context chips are present
+                  chatState.domContextElements.length > 0 ||
+                    chatState.selectedDocs.length > 0 ||
+                    chatState.selectedBlocks.length > 0
+                    ? 'mb-16' // Increased margin when context chips are present
+                    : 'mb-8', // Normal margin when no context chips
+                )}
+              >
+                <ThemesList
+                  ref={themesListRef}
+                  searchQuery={themesSearchQuery}
+                  onThemeSelection={handleThemeSelection}
+                  onFocusReturn={handleFocusReturn}
+                  onFocusChange={handleThemesFocusChange}
+                  onCloseThemes={handleCloseThemes}
+                  onReady={() => {
+                    /* themes ready */
                   }}
                 />
               </div>

@@ -1,12 +1,14 @@
 import type {
   BlocksContextItem,
   DocsContextItem,
+  ThemeContextItem,
 } from '@/hooks/use-chat-state';
 import type {
   PromptAction,
   SelectedBlock,
   SelectedDoc,
   SelectedElement,
+  SelectedTheme,
   UserMessageMetadata,
 } from '@stagewise/agent-interface/toolbar';
 
@@ -491,10 +493,22 @@ export const getSelectedBlockInfo = (
   // };
 };
 
+export const getSelectedThemeInfo = (
+  theme: ThemeContextItem,
+): SelectedTheme => {
+  const themeInstallCommand = `npx shadcn@latest add theme ${theme.name}`;
+
+  return {
+    name: theme.name,
+    installationCommand: themeInstallCommand,
+  };
+};
+
 export const collectUserMessageMetadata = (
   selectedElements: SelectedElement[],
   selectedDocs: SelectedDoc[] = [],
   selectedBlocks: SelectedBlock[] = [],
+  selectedThemes: SelectedTheme[] = [],
   promptAction: PromptAction = 'both',
 ): UserMessageMetadata => {
   const iframeWindow = getIFrameWindow();
