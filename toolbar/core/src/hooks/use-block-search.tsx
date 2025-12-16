@@ -8,6 +8,7 @@ export interface BlockItem {
   dependencies?: string[];
   registryDependencies?: string[];
   files?: FileItem[];
+  meta?: MetaItem;
 }
 
 export interface FileItem {

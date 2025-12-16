@@ -495,13 +495,14 @@ function renderSectionDetailsFiltered() {
     </div>
     <div class="blocks-list">
       ${items
-        .map(
-          (item, index) => `
+        .map((item) => {
+          const imgUrl = `https://cdn.shadcnstudio.com/ss-assets/ide-extension/${item.meta?.category || ''}/${item.meta?.section || ''}/${item.name}.png?format=auto`;
+          return `
         <div class="block-item">
+          ${imgUrl ? `<img src="${imgUrl}" alt="${escapeHtml(item.name || 'Unknown Block')}" class="component-image" />` : ''}
           <div class="block-item-header">
             <div class="block-name-wrapper">
-              <span class="block-item-name">${searchQuery ? highlightMatches(item.name || 'Unknown Block', searchQuery) : escapeHtml(item.name || 'Unknown Block')}</span>
-              <span class="block-item-badge">${escapeHtml(item.meta?.title || item.type || 'Block ' + (index + 1))}</span>
+              <span class="block-item-name">${searchQuery ? highlightMatches(item.meta?.title || 'Unknown Block', searchQuery) : escapeHtml(item.meta?.title || 'Unknown Block')}</span
             </div>
           </div>
           ${item.description ? `<p class="block-item-description">${searchQuery ? highlightMatches(item.description, searchQuery) : escapeHtml(item.description)}</p>` : ''}
@@ -520,8 +521,8 @@ function renderSectionDetailsFiltered() {
             </button>
           </div>
         </div>
-      `,
-        )
+      `;
+        })
         .join('')}
     </div>
   `;

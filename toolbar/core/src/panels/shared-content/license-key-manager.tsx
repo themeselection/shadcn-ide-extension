@@ -17,6 +17,7 @@ export function LicenseKeyManager() {
 
   const {
     licenseKey,
+    email,
     isProUser,
     lastValidated,
     removeLicenseKey,
@@ -165,6 +166,7 @@ export function LicenseKeyManager() {
           isOpen={isDialogOpen}
           onClose={handleDialogClose}
           existingLicenseKey={licenseKey}
+          existingEmail={email}
         />
       </div>
     );
@@ -209,7 +211,7 @@ export function LicenseKeyManager() {
                 size="sm"
                 onClick={() => {
                   // Open upgrade URL or show upgrade dialog
-                  window.open('https://flyonui.com/pro', '_blank');
+                  window.open('https://shadcnstudio.com/#pricing', '_blank');
                 }}
                 className="flex-1 text-xs"
               >
@@ -224,6 +226,7 @@ export function LicenseKeyManager() {
         isOpen={isDialogOpen}
         onClose={handleDialogClose}
         existingLicenseKey={null}
+        existingEmail={null}
       />
     </div>
   );

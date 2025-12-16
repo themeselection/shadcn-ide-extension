@@ -362,7 +362,7 @@ export const BlocksList = forwardRef<BlocksListRef, BlocksListProps>(
         {activeBlock && (
           <div className="flex items-center justify-center rounded-lg">
             <img
-              src={`https://cdn.flyonui.com/fy-assets/extension${activeBlock.name}.png?format=auto`}
+              src={`https://cdn.shadcnstudio.com/ss-assets/ide-extension/${activeBlock.meta.category}/${activeBlock.meta.section}/${activeBlock.name}.png?format=auto`}
               alt={activeBlock.name}
               className="size-full rounded-lg border border-border object-contain shadow-md"
             />

@@ -25,9 +25,59 @@ interface UseThemeSearchResult {
   searchError: string | null;
 }
 
+const fetchGeenericThemesFromAPI = async () => {
+  const fetchThemesUrl =
+    'https://shadcnstudio.com/r/themes/registry.json?is_extension=true';
+
+  try {
+    const response = await fetch(fetchThemesUrl, { method: 'GET' });
+    if (!response.ok) {
+      console.warn(
+        `Failed to fetch themes: ${response.status} ${response.statusText}`,
+      );
+      return [];
+    }
+    const data = await response.json();
+
+    return data.items as ThemeItem[];
+  } catch (error) {
+    console.warn('Error fetching themes:', error);
+    return [];
+  }
+};
+
+const fetchUserThemesFromAPI = async () => {
+  const fetchThemesUrl = `https://shadcnstudio.com/api/user-themes?email=dev@themeselection.com&license_key=BFC37484-BBD6-4B40-888E-DBDC50E176DE&is_extension=true`;
+  try {
+    const response = await fetch(fetchThemesUrl, { method: 'GET' });
+    if (!response.ok) {
+      console.warn(
+        `Failed to fetch themes: ${response.status} ${response.statusText}`,
+      );
+      return [];
+    }
+    const data = await response.json();
+
+    return data.themes as ThemeItem[];
+  } catch (error) {
+    console.warn('Error fetching themes:', error);
+    return [];
+  }
+};
+
 const fetchThemesFromAPI = async () => {
   const fetchThemesUrl =
     'https://shadcnstudio.com/r/themes/registry.json?is_extension=true';
+
+  const userThemes = await fetchUserThemesFromAPI();
+  if (userThemes.length > 0) {
+    console.log('Fetched user themes:', userThemes);
+  }
+
+  const genericThemes = await fetchGeenericThemesFromAPI();
+  if (genericThemes.length > 0) {
+    console.log('Fetched generic themes:', genericThemes);
+  }
 
   try {
     const response = await fetch(fetchThemesUrl, { method: 'GET' });

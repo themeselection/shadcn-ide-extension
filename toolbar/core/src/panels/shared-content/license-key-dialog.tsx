@@ -13,14 +13,17 @@ interface LicenseKeyDialogProps {
   isOpen: boolean;
   onClose: () => void;
   existingLicenseKey?: string | null;
+  existingEmail?: string | null;
 }
 
 export function LicenseKeyDialog({
   isOpen,
   onClose,
   existingLicenseKey,
+  existingEmail,
 }: LicenseKeyDialogProps) {
   const [inputKey, setInputKey] = useState('');
+  const [email, setEmail] = useState('');
   const [isValidating, setIsValidating] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
 
@@ -28,14 +31,16 @@ export function LicenseKeyDialog({
 
   // Pre-populate the input when dialog opens with existing license key
   useEffect(() => {
-    if (isOpen && existingLicenseKey) {
+    if (isOpen && existingLicenseKey && existingEmail) {
       setInputKey(existingLicenseKey);
+      setEmail(existingEmail);
       setValidationError(null);
-    } else if (isOpen && !existingLicenseKey) {
+    } else if (isOpen && (!existingLicenseKey || !existingEmail)) {
       setInputKey('');
+      setEmail('');
       setValidationError(null);
     }
-  }, [isOpen, existingLicenseKey]);
+  }, [isOpen, existingLicenseKey, existingEmail]);
 
   const handleSave = useCallback(async () => {
     if (!inputKey.trim()) {
@@ -43,19 +48,30 @@ export function LicenseKeyDialog({
       return;
     }
 
+    if (!email.trim()) {
+      setValidationError('Please enter your email address');
+      return;
+    }
+
     setIsValidating(true);
     setValidationError(null);
 
     try {
+      console.log('In handle Save function Validating license key:', inputKey);
+
+      console.log('In handle save function With email:', email);
+
       // Validate the license key format
-      const isValid = await validateLicenseKey(inputKey.trim());
+      const isValid = await validateLicenseKey(inputKey.trim(), email.trim());
 
       if (isValid) {
-        await saveLicenseKey(inputKey.trim());
+        await saveLicenseKey(inputKey.trim(), email.trim());
         setInputKey('');
         onClose();
       } else {
-        setValidationError('Invalid license key. Please check and try again.');
+        setValidationError(
+          'Invalid license key or Email. Please check and try again.',
+        );
       }
     } catch (error) {
       setValidationError(
@@ -66,7 +82,7 @@ export function LicenseKeyDialog({
     } finally {
       setIsValidating(false);
     }
-  }, [inputKey, saveLicenseKey, validateLicenseKey, onClose]);
+  }, [inputKey, email, saveLicenseKey, validateLicenseKey, onClose]);
 
   const handleCancel = useCallback(() => {
     setInputKey('');
@@ -100,15 +116,35 @@ export function LicenseKeyDialog({
               <div>
                 <DialogTitle className="font-semibold text-foreground">
                   {existingLicenseKey
-                    ? 'Update License Key'
-                    : 'Enter License Key'}
+                    ? 'Update Your Credentials'
+                    : 'Enter Your Credentials'}
                 </DialogTitle>
                 <Description className="text-foreground text-sm">
                   {existingLicenseKey
-                    ? 'Update your pro license key'
-                    : 'Enter your pro license key to unlock premium features'}
+                    ? 'Update your pro license Credentials'
+                    : 'Enter your credentials to access premium features'}
                 </Description>
               </div>
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="email"
+                className="mb-2 block font-medium text-foreground text-sm"
+              >
+                Email Address
+              </label>
+
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Enter your email..."
+                className="mb-2 w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500"
+                disabled={isValidating}
+              />
             </div>
 
             {/* Input */}
@@ -119,6 +155,7 @@ export function LicenseKeyDialog({
               >
                 License Key
               </label>
+
               <input
                 id="license-key"
                 type="text"

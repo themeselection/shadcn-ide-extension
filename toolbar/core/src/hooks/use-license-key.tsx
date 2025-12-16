@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 
 // License key storage key
-const LICENSE_KEY_STORAGE_KEY = 'stagewise_pro_license_key';
+const LICENSE_KEY_STORAGE_KEY = 'ShadcnStudio_license_key';
 
 interface LicenseKeyState {
   licenseKey: string | null;
   isProUser: boolean;
+  email: string | null;
   isValidated: boolean;
   lastValidated: Date | null;
 }
@@ -13,6 +14,7 @@ interface LicenseKeyState {
 export function useLicenseKey() {
   const [licenseState, setLicenseState] = useState<LicenseKeyState>({
     licenseKey: null,
+    email: null,
     isProUser: false,
     isValidated: false,
     lastValidated: null,
@@ -25,6 +27,7 @@ export function useLicenseKey() {
         const parsed = JSON.parse(storedData);
         setLicenseState({
           licenseKey: parsed.licenseKey,
+          email: parsed.email,
           isProUser: parsed.isValidated === true,
           isValidated: parsed.isValidated === true,
           lastValidated: parsed.lastValidated
@@ -58,22 +61,24 @@ export function useLicenseKey() {
   }, [loadLicenseKey]);
 
   const validateLicenseKey = useCallback(
-    async (key: string): Promise<boolean> => {
-      if (!key || typeof key !== 'string') {
+    async (licensekey: string, email: string): Promise<boolean> => {
+      if (!licensekey || typeof licensekey !== 'string') {
         return false;
       }
 
-      const trimmedLicenseKey = key.trim();
-      const url = 'https://flyonui.com/api/mcp/validate-license-key';
-      // Will try to implement backend validation with the help of API.
+      if (!email || typeof email !== 'string' || !email.includes('@')) {
+        return false;
+      }
 
-      // TODO: Update this staging URL to production when ready
+      const trimmedLicenseKey = licensekey.trim();
+      const trimmedEmail = email.trim();
 
-      const response = await fetch(url, {
+      const validateUrl = `https://shadcnstudio.com/api/validate-user?email=${trimmedEmail}&license_key=${trimmedLicenseKey}`;
+
+      const response = await fetch(validateUrl, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'x-license-key': trimmedLicenseKey,
         },
       });
 
@@ -85,26 +90,28 @@ export function useLicenseKey() {
         return false;
       }
       return true;
-
-      // For demo purposes, consider any properly formatted key as valid
-      // In production, this should validate against your license server
     },
     [],
   );
 
   const saveLicenseKey = useCallback(
-    async (key: string): Promise<void> => {
+    async (key: string, email: string): Promise<void> => {
       const trimmedKey = key.trim().toUpperCase();
+      const trimmedEmail = email.trim();
+
+      console.log('Saving license key for email:', trimmedEmail);
+      console.log('License key to save:', trimmedKey);
 
       // Validate the key first
-      const isValid = await validateLicenseKey(trimmedKey);
+      const isValid = await validateLicenseKey(trimmedKey, trimmedEmail);
 
       if (!isValid) {
-        throw new Error('Invalid license key');
+        throw new Error('Invalid license key or Email');
       }
 
       const licenseData = {
         licenseKey: trimmedKey,
+        email: trimmedEmail,
         isValidated: true,
         lastValidated: new Date().toISOString(),
       };
@@ -119,6 +126,7 @@ export function useLicenseKey() {
         // Update state immediately
         const newState = {
           licenseKey: trimmedKey,
+          email: trimmedEmail,
           isProUser: true,
           isValidated: true,
           lastValidated: new Date(),
@@ -147,6 +155,7 @@ export function useLicenseKey() {
       localStorage.removeItem(LICENSE_KEY_STORAGE_KEY);
       setLicenseState({
         licenseKey: null,
+        email: null,
         isProUser: false,
         isValidated: false,
         lastValidated: null,
@@ -172,11 +181,15 @@ export function useLicenseKey() {
     }
 
     try {
-      const isValid = await validateLicenseKey(licenseState.licenseKey);
+      const isValid = await validateLicenseKey(
+        licenseState.licenseKey,
+        licenseState.email,
+      );
 
       if (isValid) {
         const licenseData = {
           licenseKey: licenseState.licenseKey,
+          email: licenseState.email,
           isValidated: true,
           lastValidated: new Date().toISOString(),
         };
@@ -219,6 +232,7 @@ export function useLicenseKey() {
   return {
     // State
     licenseKey: licenseState.licenseKey,
+    email: licenseState.email,
     isProUser: licenseState.isProUser,
     isValidated: licenseState.isValidated,
     lastValidated: licenseState.lastValidated,

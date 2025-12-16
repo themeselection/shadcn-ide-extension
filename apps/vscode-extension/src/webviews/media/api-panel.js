@@ -488,7 +488,7 @@ function renderComponentDetails(blocks, componentName, componentPath, error) {
     noBlocks.className = 'no-results';
     noBlocks.innerHTML = `
       <p>📄 No blocks found.</p>
-      <p>Please <a href="https://www.flyonui.com/pro">Upgrade to Pro</a> for more blocks.</p>
+      <p>Please <a href="https://shadcnstudio.com/#pricing">Upgrade to Pro</a> for more blocks.</p>
     `;
     grid.appendChild(noBlocks);
     return;
