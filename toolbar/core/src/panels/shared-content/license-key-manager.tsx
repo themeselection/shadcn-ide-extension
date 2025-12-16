@@ -93,18 +93,18 @@ export function LicenseKeyManager() {
             <ShieldCheckIcon className="h-4 w-4 text-foreground" />
             <h3 className="font-medium text-foreground text-sm">Pro License</h3>
           </div>
-          <div className="flex h-5 items-center rounded-full bg-green-100 px-2.5 py-0.5 dark:bg-green-900/30">
-            <CheckCircleIcon className="mr-1 h-3 w-3 text-green-600 dark:text-green-400" />
-            <span className="font-medium text-green-700 text-xs dark:text-green-300">
+          <div className="flex h-5 items-center rounded-full bg-zinc-100 px-2.5 py-0.5 dark:bg-zinc-800/50">
+            <CheckCircleIcon className="mr-1 h-3 w-3 text-zinc-600 dark:text-zinc-400" />
+            <span className="font-medium text-xs text-zinc-700 dark:text-zinc-300">
               Active
             </span>
           </div>
         </div>{' '}
-        <div className="rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950/50">
+        <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-900/50">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <code className="rounded bg-green-100 px-2 py-1 font-mono text-green-700 text-xs dark:bg-green-900/50 dark:text-green-300">
+                <code className="rounded bg-zinc-100 px-2 py-1 font-mono text-xs text-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-300">
                   {formatLicenseKey(licenseKey)}
                 </code>
                 {needsRevalidation() && (
@@ -130,7 +130,7 @@ export function LicenseKeyManager() {
 
             <div className="flex items-center justify-between text-xs">
               {lastValidated && (
-                <span className="text-green-600 dark:text-green-400">
+                <span className="text-zinc-600 dark:text-zinc-400">
                   Last validated {formatLastValidated(lastValidated)}
                 </span>
               )}
@@ -141,7 +141,7 @@ export function LicenseKeyManager() {
                   variant="ghost"
                   onClick={handleRefreshValidation}
                   disabled={isRefreshing}
-                  className="h-6 px-2 text-green-600 text-xs hover:text-green-700 dark:text-green-400 dark:hover:text-green-300"
+                  className="h-6 px-2 text-xs text-zinc-600 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
                 >
                   <RefreshCwIcon
                     className={`mr-1 h-3 w-3 ${isRefreshing ? 'animate-spin' : ''}`}
@@ -153,7 +153,7 @@ export function LicenseKeyManager() {
                   size="sm"
                   variant="ghost"
                   onClick={handleRemoveLicense}
-                  className="h-6 px-2 text-red-600 text-xs hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                  className="h-6 px-2 text-xs text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300"
                 >
                   <TrashIcon className="mr-1 h-3 w-3" />
                   Remove

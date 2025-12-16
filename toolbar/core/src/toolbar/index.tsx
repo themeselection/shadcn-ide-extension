@@ -38,11 +38,11 @@ export function Toolbar({
       as="div"
       className={cn(
         'pointer-events-auto absolute z-10 origin-center rounded-full p-0.5 shadow-md transition-transform duration-500 ease-spring',
-        minimized || isInitialLoad ? 'size-10 bg-blue-950/80' : 'size-auto',
+        minimized || isInitialLoad ? 'size-10 bg-zinc-900/80' : 'size-auto',
         isDragged &&
-          'scale-110 bg-sky-100/60 shadow-lg shadow-sky-500/10 blur-[0.2px]',
+          'scale-110 bg-zinc-100/60 shadow-lg shadow-zinc-500/10 blur-[0.2px]',
         !requiresUserAttention && isAvailable
-          ? '[--active-secondary:var(--color-blue-100)] [--active:var(--color-blue-600)] [--primary:var(--color-zinc-950)] [--secondary:var(--color-zinc-400)]'
+          ? '[--active-secondary:var(--color-zinc-100)] [--active:var(--color-zinc-600)] [--primary:var(--color-zinc-950)] [--secondary:var(--color-zinc-400)]'
           : 'bg-orange-200/50 [--active-secondary:var(--color-orange-100)] [--active:var(--color-orange-600)] [--primary:var(--color-orange-900)] [--secondary:var(--color-orange-100)]',
         'stroke-[var(--primary)] text-[var(--primary)]',
       )}

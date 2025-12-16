@@ -99,11 +99,11 @@ export function CompactSettingsPositionSelector() {
                 title={position.tooltip}
                 className={cn(
                   'rounded-full border p-1.5 transition-all duration-200 ease-out',
-                  'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+                  'focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2',
                   'hover:scale-105 hover:cursor-pointer active:scale-95',
                   isActive
-                    ? 'border-green-500 bg-green-50 text-green-700 shadow-sm dark:border-green-400 dark:bg-green-900/30 dark:text-green-300'
-                    : 'border-gray-200 bg-background text-foreground hover:border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-700',
+                    ? 'border-zinc-900 bg-zinc-100 text-zinc-900 shadow-sm dark:border-zinc-300 dark:bg-zinc-800 dark:text-zinc-100'
+                    : 'border-zinc-200 bg-background text-foreground hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700 dark:hover:border-zinc-600 dark:hover:bg-zinc-800',
                 )}
                 aria-pressed={isActive}
                 aria-label={position.tooltip}
