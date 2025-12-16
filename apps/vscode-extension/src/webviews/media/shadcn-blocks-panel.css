@@ -848,6 +848,21 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.block-item .component-image {
+  width: 100%;
+  object-fit: cover;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  background: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-panel-border);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.block-item:hover .component-image {
+  border-color: var(--vscode-focusBorder);
+}
+
 .block-item-header {
   display: flex;
   align-items: flex-start;
@@ -892,8 +907,82 @@ body {
   gap: 8px;
   flex-wrap: wrap;
   margin-top: 4px;
+  align-items: center;
 }
 
+/* Icon button styles for blocks */
+.block-item-actions .icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--vscode-button-border);
+  border-radius: 6px;
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-foreground);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.block-item-actions .icon-btn:hover {
+  background: var(--vscode-button-hoverBackground);
+  border-color: var(--vscode-focusBorder);
+  transform: translateY(-1px);
+}
+
+.block-item-actions .icon-btn:active {
+  transform: translateY(0);
+}
+
+.block-item-actions .icon-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+}
+
+.block-item-actions .copy-btn:hover {
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+}
+
+.block-item-actions .install-btn:hover {
+  background: var(--vscode-debugIcon-startForeground);
+  color: white;
+  border-color: var(--vscode-debugIcon-startForeground);
+}
+
+/* Tooltip styles for icon buttons */
+.block-item-actions .icon-btn::before {
+  content: attr(title);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--vscode-editorHoverWidget-background);
+  color: var(--vscode-editorHoverWidget-foreground);
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  pointer-events: none;
+  z-index: 1000;
+  border: 1px solid var(--vscode-editorHoverWidget-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.block-item-actions .icon-btn:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Legacy button styles (keeping for backward compatibility) */
 .btn-action {
   display: inline-flex;
   align-items: center;
