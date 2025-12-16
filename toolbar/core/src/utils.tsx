@@ -3,6 +3,7 @@ import type {
   DocsContextItem,
   ThemeContextItem,
 } from '@/hooks/use-chat-state';
+
 import type {
   CliVersion,
   PromptAction,
@@ -472,14 +473,39 @@ export const getSelectedDocInfo = (doc: DocsContextItem): SelectedDoc => {
   };
 };
 
+/**
+ * Gets user license data from localStorage.
+ * This directly accesses the same storage used by useLicenseKey hook.
+ * Note: This is synchronous and doesn't validate - use the hook for full functionality.
+ */
+export const getLicenseDataFromStorage = (): {
+  email: string | null;
+  licenseKey: string | null;
+} => {
+  try {
+    const stored = localStorage.getItem('ShadcnStudio_license_key');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      return {
+        email: parsed.email || null,
+        licenseKey: parsed.licenseKey || null,
+      };
+    }
+  } catch (error) {
+    console.warn('Failed to get license data:', error);
+  }
+  return { email: null, licenseKey: null };
+};
+
 export const getSelectedBlockInfo = (
   block: BlocksContextItem,
   cliVersion: CliVersion,
 ): SelectedBlock => {
+  const { email, licenseKey } = getLicenseDataFromStorage();
   const blockInstallationCmd =
     cliVersion === 'v3'
       ? `npx shadcn@latest add @ss-blocks/${block.name}`
-      : `npx `;
+      : `npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${block.name}.json?email=${email}&license_key=${licenseKey}"`;
 
   return {
     name: block.name,
@@ -500,8 +526,14 @@ export const getSelectedBlockInfo = (
 
 export const getSelectedThemeInfo = (
   theme: ThemeContextItem,
+  cliVersion: CliVersion,
 ): SelectedTheme => {
-  const themeInstallCommand = `npx shadcn@latest add theme ${theme.name}`;
+  const { email, licenseKey } = getLicenseDataFromStorage();
+
+  const themeInstallCommand =
+    cliVersion === 'v3'
+      ? `npx shadcn@latest add theme ${theme.name}`
+      : `npx shadcn@latest add "https://shadcnstudio.com/r/themes/${theme.name}.json?email=${email}&license_key=${licenseKey}"`;
 
   return {
     name: theme.name,
