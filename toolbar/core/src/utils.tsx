@@ -522,6 +522,7 @@ export const collectUserMessageMetadata = (
     selectedElements,
     selectedDocs,
     selectedBlocks,
+    selectedThemes,
     promptAction,
     viewportResolution: {
       width: iframeWindow?.innerWidth,

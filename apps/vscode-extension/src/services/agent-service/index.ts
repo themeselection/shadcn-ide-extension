@@ -6,6 +6,7 @@ import {
   type SelectedBlock,
   type SelectedDoc,
   type SelectedElement,
+  type SelectedTheme,
   type UserMessage,
   type UserMessageContentItem,
 } from '@stagewise/agent-interface/agent';
@@ -216,6 +217,19 @@ function generateBlockContext(block: SelectedBlock, index: number): string {
 </block>`.trim();
 }
 
+function generateThemeContext(theme: SelectedTheme, index: number): string {
+  return `
+<theme index="${index + 1}">
+    <instructions>
+      The user has selected the following theme so you have to install the theme by following the steps.
+      1. Install the theme in the codebase using the provided installation command. ${theme.installationCommand}
+      2. Once installed, refer to the user's project structure and integrate the theme appropriately or as instructed by the user.
+      3. You can use this theme as reference to adapt and implement similar styling in the user's project.
+    </instructions>
+  <name>${theme.name}</name>
+  <installation_command>${theme.installationCommand}</installation_command>
+</theme>`.trim();
+}
 /**
  * Creates a comprehensive prompt for a Coding Agent LLM.
  *
@@ -269,6 +283,13 @@ export function createPrompt(msg: UserMessage): string {
       ? `<selected_blocks>
     ${msg.metadata.selectedBlocks.map((block, index) => generateBlockContext(block, index)).join('\n')}
   </selected_blocks>`
+      : ''
+  }
+  ${
+    msg.metadata.selectedThemes && msg.metadata.selectedThemes.length > 0
+      ? `<selected_themes>
+    ${msg.metadata.selectedThemes.map((theme, index) => generateThemeContext(theme, index)).join('\n')}
+  </selected_themes>`
       : ''
   }
   <pageTitle>${msg.metadata.currentTitle}</pageTitle>

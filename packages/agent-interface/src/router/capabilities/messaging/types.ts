@@ -184,6 +184,10 @@ export const userMessageMetadataSchema = z.object({
   userAgent: z.string().max(1024),
   locale: z.string().max(64),
   selectedElements: z.array(selectedElementSchema),
+  selectedThemes: z
+    .array(selectedThemeSchema)
+    .max(20)
+    .describe('Selected themes'),
   selectedDocs: z
     .array(selectedDocSchema)
     .max(20)
