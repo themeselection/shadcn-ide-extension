@@ -15,6 +15,7 @@ import { CompactSettingsPositionSelector } from './shared-content/compact-settin
 import { CompactThemeToggle } from './shared-content/compact-theme-toggle';
 import { LicenseKeyManager } from './shared-content/license-key-manager';
 import { PromptActionSelector } from './shared-content/prompt-action-selector';
+import { ShadcnCliVersionSelector } from './shared-content/shadcn-cli-version-selector';
 
 export function SettingsPanel() {
   const { closeSettings } = usePanels();
@@ -44,6 +45,8 @@ export function SettingsPanel() {
           <PromptActionSelector />
           <hr className="-mx-4 text-zinc-500/15 dark:text-zinc-500/30" />
           <CompactThemeToggle />
+          <hr className="-mx-4 text-zinc-500/15 dark:text-zinc-500/30" />
+          <ShadcnCliVersionSelector />
           <hr className="-mx-4 text-zinc-500/15 dark:text-zinc-500/30" />
           {/* Shortcut info for toggling the chat panel */}
           <div>

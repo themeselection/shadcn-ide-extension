@@ -4,6 +4,7 @@ import type {
   ThemeContextItem,
 } from '@/hooks/use-chat-state';
 import type {
+  CliVersion,
   PromptAction,
   SelectedBlock,
   SelectedDoc,
@@ -473,8 +474,12 @@ export const getSelectedDocInfo = (doc: DocsContextItem): SelectedDoc => {
 
 export const getSelectedBlockInfo = (
   block: BlocksContextItem,
+  cliVersion: CliVersion,
 ): SelectedBlock => {
-  const blockInstallationCmd = `npx shadcn@latest add @ss-blocks/${block.name}`;
+  const blockInstallationCmd =
+    cliVersion === 'v3'
+      ? `npx shadcn@latest add @ss-blocks/${block.name}`
+      : `npx `;
 
   return {
     name: block.name,
@@ -510,6 +515,7 @@ export const collectUserMessageMetadata = (
   selectedBlocks: SelectedBlock[] = [],
   selectedThemes: SelectedTheme[] = [],
   promptAction: PromptAction = 'both',
+  cliVersion: CliVersion = 'v3',
 ): UserMessageMetadata => {
   const iframeWindow = getIFrameWindow();
   return {
@@ -524,6 +530,7 @@ export const collectUserMessageMetadata = (
     selectedBlocks,
     selectedThemes,
     promptAction,
+    cliVersion,
     viewportResolution: {
       width: iframeWindow?.innerWidth,
       height: iframeWindow?.innerHeight,

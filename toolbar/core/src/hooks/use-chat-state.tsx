@@ -137,7 +137,7 @@ export const ChatStateProvider = ({ children }: ChatStateProviderProps) => {
   const { sendMessage: sendAgentMessage } = useAgentMessaging();
   const { isChatOpen } = usePanels();
   const agentState = useAgentState();
-  const { promptAction } = useAppState();
+  const { promptAction, cliVersion } = useAppState();
 
   const startPromptCreation = useCallback(() => {
     setIsPromptCreationMode(true);
@@ -274,7 +274,7 @@ export const ChatStateProvider = ({ children }: ChatStateProviderProps) => {
         getSelectedDocInfo(doc),
       );
       const selectedBlocksInfo = await Promise.all(
-        selectedBlocks.map((block) => getSelectedBlockInfo(block)),
+        selectedBlocks.map((block) => getSelectedBlockInfo(block, cliVersion)),
       );
       const selectedThemesInfo = selectedThemes.map((theme) =>
         getSelectedThemeInfo(theme),
@@ -286,6 +286,7 @@ export const ChatStateProvider = ({ children }: ChatStateProviderProps) => {
         selectedBlocksInfo,
         selectedThemesInfo,
         promptAction,
+        cliVersion,
       );
 
       const baseUserMessage: UserMessage = {

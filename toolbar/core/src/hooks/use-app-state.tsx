@@ -3,7 +3,10 @@
 // This hook provides information to all components about whether certain parts of the companion layout should be rendered or not.
 // Components can use this information to hide themselves or show additional information.
 
-import type { PromptAction } from '@stagewise/agent-interface/toolbar';
+import type {
+  CliVersion,
+  PromptAction,
+} from '@stagewise/agent-interface/toolbar';
 import {
   createContext,
   createRef,
@@ -36,6 +39,9 @@ export interface AppState {
 
   promptAction: PromptAction;
   setPromptAction: (action: PromptAction) => void;
+
+  cliVersion: CliVersion;
+  setCliVersion: (version: CliVersion) => void;
 }
 
 interface InternalAppState extends AppState {
@@ -58,6 +64,7 @@ function loadStateFromStorage(): Partial<InternalAppState> {
       minimized: parsed.minimized,
       theme: parsed.theme,
       promptAction: parsed.promptAction,
+      cliVersion: parsed.cliVersion,
     };
   } catch (error) {
     console.error('Failed to load state from storage:', error);
@@ -86,6 +93,7 @@ export function AppStateProvider({ children }: { children?: ReactNode }) {
       minimized: storedState.minimized ?? false,
       theme: storedState.theme ?? 'system',
       promptAction: storedState.promptAction ?? 'send',
+      cliVersion: storedState.cliVersion ?? 'v3',
       requestMainAppBlock: () => 0, // These will be replaced by the actual implementations
       requestMainAppUnblock: () => 0,
       discardMainAppBlock: () => {},
@@ -96,6 +104,7 @@ export function AppStateProvider({ children }: { children?: ReactNode }) {
       expand: () => {},
       setTheme: () => {},
       setPromptAction: () => {},
+      setCliVersion: () => {},
     };
   });
 
@@ -229,6 +238,10 @@ export function AppStateProvider({ children }: { children?: ReactNode }) {
     setState((prev) => ({ ...prev, promptAction }));
   }, []);
 
+  const setCliVersion = useCallback((cliVersion: CliVersion) => {
+    setState((prev) => ({ ...prev, cliVersion }));
+  }, []);
+
   const value: AppState = {
     requestMainAppBlock,
     requestMainAppUnblock,
@@ -245,6 +258,8 @@ export function AppStateProvider({ children }: { children?: ReactNode }) {
     setTheme,
     promptAction: state.promptAction,
     setPromptAction,
+    cliVersion: state.cliVersion,
+    setCliVersion,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

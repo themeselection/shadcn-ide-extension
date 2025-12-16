@@ -17,6 +17,7 @@ export {
   userMessageSchema,
   type AgentMessageContentItemPart,
   type AgentMessageUpdate,
+  type CliVersion,
   type PromptAction,
   type SelectedBlock,
   type SelectedDoc,

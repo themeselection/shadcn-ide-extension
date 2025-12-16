@@ -170,6 +170,13 @@ export const promptActionSchema = z
 
 export type PromptAction = z.infer<typeof promptActionSchema>;
 
+// Enum for the Shadcn CLI version
+export const CliVersionSchema = z
+  .enum(['v3', 'v2'])
+  .describe('The version of the Shadcn CLI used.');
+
+export type CliVersion = z.infer<typeof CliVersionSchema>;
+
 export const userMessageMetadataSchema = z.object({
   currentUrl: z.string().max(1024).url().nullable(),
   currentTitle: z.string().max(256).nullable(),
@@ -200,6 +207,9 @@ export const userMessageMetadataSchema = z.object({
     .optional()
     .default('send')
     .describe('Action to take when triggering the prompt'),
+  cliVersion: CliVersionSchema
+    .default('v3')
+    .describe('The version of the Shadcn CLI used.'),
 });
 
 export type UserMessageMetadata = z.infer<typeof userMessageMetadataSchema>;
