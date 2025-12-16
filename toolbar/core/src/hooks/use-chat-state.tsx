@@ -277,7 +277,7 @@ export const ChatStateProvider = ({ children }: ChatStateProviderProps) => {
         selectedBlocks.map((block) => getSelectedBlockInfo(block, cliVersion)),
       );
       const selectedThemesInfo = selectedThemes.map((theme) =>
-        getSelectedThemeInfo(theme),
+        getSelectedThemeInfo(theme, cliVersion),
       );
 
       const metadata = collectUserMessageMetadata(
