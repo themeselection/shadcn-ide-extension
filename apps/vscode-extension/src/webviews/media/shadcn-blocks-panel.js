@@ -380,11 +380,14 @@ function createSectionCardHtml(section) {
 
   return `
     <div class="section-card" data-id="${escapeHtml(section.id)}" data-name="${escapeHtml(section.name)}">
-      <div class="section-preview">
-        ${displayName}
+      <div class="section-card-image-wrapper">
+        <img src="${escapeHtml(section.img)}" alt="${escapeHtml(section.name)}" class="section-card-image" />
       </div>
-      <div class="section-info">
-        <p class="section-type">${section.count || 0} blocks</p>
+      <div class="section-card-content">
+        <h3 class="section-card-title">${displayName}</h3>
+        <div class="section-card-footer">
+          <span class="section-card-count">${section.count || 0} blocks</span>
+        </div>
       </div>
     </div>
   `;

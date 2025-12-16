@@ -576,17 +576,16 @@ body {
 /* Blocks Grid */
 .blocks-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
 }
 
 /* Section Cards */
 .section-card {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px; 
-  padding: 12px 14px;
+  flex-direction: column;
+  padding: 16px;
+  margin-bottom: 16px;
   border-radius: 8px;
   border: 1px solid var(--vscode-input-border, var(--vscode-contrastBorder, transparent));
   background-color: var(--vscode-editor-background);
@@ -597,21 +596,28 @@ body {
 .section-card:hover {
   border-color: var(--vscode-focusBorder);
   background-color: var(--vscode-list-hoverBackground);
-  transform: translateX(2px);
 }
 
-.section-card-icon {
-  font-size: 20px;
-  flex-shrink: 0;
-  opacity: 0.8;
+.section-card-image-wrapper {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.section-card-image {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  display: block;
 }
 
 .section-card-content {
-  flex: 1;
-  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
-.section-card-name {
+.section-card-title {
   font-size: 13px;
   font-weight: 600;
   margin: 0;
@@ -619,24 +625,16 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  flex: 1;
+}
+
+.section-card-footer {
+  flex-shrink: 0;
 }
 
 .section-card-count {
   font-size: 11px;
-  margin: 2px 0 0 0;
   color: var(--vscode-descriptionForeground);
-}
-
-.section-card-arrow {
-  font-size: 14px;
-  color: var(--vscode-descriptionForeground);
-  flex-shrink: 0;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-}
-
-.section-card:hover .section-card-arrow {
-  opacity: 1;
 }
 
 .block-card {

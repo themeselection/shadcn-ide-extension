@@ -433,6 +433,95 @@ const formatSectionName = (section: string): string => {
 //     },
 // ]
 
+export const getImageForSection = (sectionId: string): string => {
+  const sectionImages: { [key: string]: string } = {
+    'about-us-page':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/about-us-page/about-us-page-19.png',
+    'app-integration':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/app-integration/app-integration-10.png?format=auto',
+    'blog-component':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/blog-component/blog-component-02.png?format=auto',
+    'contact-us-page':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/contact-us-page/contact-us-page-16.png?format=auto',
+    'cookies-consent':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/cookies-consent/cookies-consent-01.png?format=auto',
+    'cta-section':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/cta-section/cta-section-14.png?format=auto',
+    'error-page':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/error-page/error-page-02.png?format=auto',
+    'faq-component':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/faq-component/faq-component-19.png?format=auto',
+    'features-section':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/features-section/features-section-12.png?format=auto',
+    'footer-component':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/footer-component/footer-component-02.png?format=auto',
+    'forgot-password': '',
+    'gallery-component':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/gallery-component/gallery-component-05.png?format=auto',
+    'hero-section':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/hero-section/hero-section-23.png?format=auto',
+    'login-page': '',
+    'logo-cloud':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/logo-cloud/logo-cloud-06.png?format=auto',
+    'navbar-component':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/navbar-component/navbar-component-02.png?format=auto',
+    portfolio:
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/portfolio/portfolio-13.png?format=auto',
+    'pricing-component':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/pricing-component/pricing-component-15.png?format=auto',
+    register:
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/register/register-01.png?format=auto',
+    'reset-password': '',
+    'social-proof':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/social-proof/social-proof-11.png?format=auto',
+    'team-section':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/team-section/team-section-13.png?format=auto',
+    'testimonials-component':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/testimonials-component/testimonials-component-19.png?format=auto',
+    'two-factor-authentication':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/two-factor-authentication/two-factor-authentication-01.png?format=auto',
+    'verify-email': '',
+    'application-shell': '',
+    'charts-component':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/dashboard-and-application/charts-component/chart-component-09.png?format=auto',
+    'dashboard-dialog': '',
+    'dashboard-shell':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/dashboard-and-application/dashboard-shell/dashboard-shell-01.png?format=auto',
+    'dashboard-dropdown': '',
+    'dashboard-footer': '',
+    'dashboard-header': '',
+    'dashboard-sidebar': '',
+    'multi-step-form': '',
+    'statistics-component':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/dashboard-and-application/statistics-component/statistics-component-04.png?format=auto',
+    'widgets-component':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/dashboard-and-application/widgets-component/widget-component-01.png?format=auto',
+    'datatable-component': '',
+    'bento-grid':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/bento-grid/bento-grid/bento-grid-14.png?format=auto',
+    'category-filter': '',
+    'checkout-page':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/ecommerce/checkout-page/checkout-page-01.png?format=auto',
+    'mega-footer':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/ecommerce/mega-footer/mega-footer-02.png?format=auto',
+    'offer-modal': '',
+    'order-summary':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/ecommerce/order-summary/order-summary-01.png?format=auto',
+    'shopping-cart': '',
+    'product-reviews':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/ecommerce/product-reviews/product-reviews-03.png?format=auto',
+    'product-quick-view':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/ecommerce/product-quick-view/product-quick-view-01.png?format=auto',
+    'product-overview':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/ecommerce/product-overview/product-overview-01.png?format=auto',
+    'product-list':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/ecommerce/product-list/product-list-06.png?format=auto',
+    'product-category':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/ecommerce/product-category/product-category-11.png?format=auto',
+  };
+  return sectionImages[sectionId] || '';
+};
+
 export const getSections = (items: Item[]): Section[] => {
   const sectionMap = new Map();
 
@@ -443,6 +532,7 @@ export const getSections = (items: Item[]): Section[] => {
         id: section,
         name: formatSectionName(section),
         count: 0,
+        img: getImageForSection(section),
         items: [],
       });
     }
@@ -451,6 +541,9 @@ export const getSections = (items: Item[]): Section[] => {
     sectionData.count++;
     sectionData.items.push(item);
   });
+
+  // print all section Name
+  console.log('Sections found:', Array.from(sectionMap.keys()));
 
   return Array.from(sectionMap.values());
 };
