@@ -1,9 +1,9 @@
 {
-  "name": "flyonui-extension-cli",
+  "name": "shadcn-studio-cli",
   "module": "src/index.ts",
   "type": "module",
-  "version": "0.2.6",
-  "description": "FlyOnUI Extension CLI",
+  "version": "0.1.0",
+  "description": "Shadcn/Studio Extension CLI",
   "author": "stagewise GmbH",
   "license": "AGPL-3.0-only",
   "repository": {
@@ -12,7 +12,7 @@
   },
   "private": false,
   "bin": {
-    "flyonui-extension-cli": "dist/index.cjs"
+    "shadcn-studio-cli": "dist/index.cjs"
   },
   "files": [
     "dist"

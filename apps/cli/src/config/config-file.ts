@@ -37,7 +37,7 @@ const configFileSchema = z.object({
   plugins: z.array(pluginSchema).optional(),
 });
 
-export const CONFIG_FILE_NAME = 'flyonui-extension.json';
+export const CONFIG_FILE_NAME = 'shadcn-extension.json';
 
 export interface ConfigLoadError {
   type: 'json' | 'validation' | 'other';

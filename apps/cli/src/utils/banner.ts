@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
+import { text } from 'node:stream/consumers';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -17,69 +18,20 @@ export function getVersion(): string {
 }
 
 function displayAsciiLogo(): void {
-  // Define the colors for the FlyonUI primary color in gradient variations.
-
-  // Converting to hex and creating a subtle gradient
-  const gradientColors = [
-    chalk.hex('#8A73DB'), // Lighter shade
-    chalk.hex('#7E66D6'),
-    chalk.hex('#7359D1'), // Primary color
-    chalk.hex('#6A4FCC'),
-    chalk.hex('#614AC7'), // Darker shade
-  ];
-
-  // Define the color for the inner part of the logo (the "kernel").
-  const kernelColor = chalk.white.bold;
-
-  // The ASCII art for the logo.
-  const logo = [
-    ' @@@@@@@@@@@@@@@@@  ',
-    '@@@@@@@@@@@@@@@@@@@@',
-    '@@@@@@@@    @@@@@@@@',
-    '@@@@@@@      @@@@@@@',
-    '@@@@@@  @@@@  @@@@@@',
-    '@@@@   @@@@@@   @@@@',
-    '@@@@@@@@@   @@@@@@@@',
-    '@@@@@@@@@@@@@@@@@@@@',
-    ' @@@@@@@@@@@@@@@@@@ ',
-  ];
+  // Define the colors for the shadcn primary color in gradient variations.
 
   const textArt = [
-    '                                      ',
-    '                                      ',
-    '    ________                        _ ',
-    '   / ____/ /_  _______ _____ __  __(_)',
-    '  / /_  / / / / / __  / __  / / / / / ',
-    ' / __/ / / /_/ / /_/ / / / / /_/ / /  ',
-    '/_/   /_/___, /_____/_/ /_/___,_/_/   ',
-    '        /____/                        ',
-    '                                      ',
+    '  ▌    ▌     ▌  ▗    ▌▘  ',
+    '▛▘▛▌▀▌▛▌▛▘▛▌▐ ▛▘▜▘▌▌▛▌▌▛▌',
+    '▄▌▌▌█▌▙▌▙▖▌▌▞ ▄▌▐▖▙▌▙▌▌▙▌',
+    '            ▘            ',
   ];
 
   console.log('');
 
   // Display logo and text side by side
-  for (let i = 0; i < Math.max(logo.length, textArt.length); i++) {
+  for (let i = 0; i < Math.max(text.length, textArt.length); i++) {
     let line = '';
-
-    // Add the logo part
-    if (i < logo.length) {
-      const logoLine = logo[i]!;
-      const outerColor =
-        gradientColors[i] || gradientColors[gradientColors.length - 1]!;
-      let coloredLogoLine = '';
-
-      for (const char of logoLine) {
-        if (char === '#' || char === '\\') {
-          coloredLogoLine += kernelColor(char);
-        } else {
-          coloredLogoLine += outerColor(char);
-        }
-      }
-      line += `  ${coloredLogoLine}`;
-    } else {
-      line += `  ${' '.repeat(12)}`; // Maintain spacing when logo is shorter
-    }
 
     // Add spacing between logo and text
     line += '    ';
@@ -116,7 +68,7 @@ export function printBanner(silent: boolean): void {
   displayAsciiLogo();
   console.log();
   console.log(
-    chalk.hex('#7359D1').bold('     FLYONUI EXTENSION') +
+    chalk.hex('#7359D1').bold('     Shadcn/studio IDE EXTENSION') +
       chalk.gray(` v${version}`),
   );
   console.log();
@@ -132,7 +84,8 @@ export function printCompactBanner(silent: boolean): void {
 
   console.log();
   console.log(
-    chalk.hex('#7359D1').bold('  FLYONUI') + chalk.gray(` v${version}`),
+    chalk.hex('#7359D1').bold('  Shadcn/studio IDE EXTENSION') +
+      chalk.gray(` v${version}`),
   );
   console.log();
 }
