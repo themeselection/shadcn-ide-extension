@@ -166,7 +166,7 @@ export const useBlockSearch = (
         // Show local results immediately
         setSearchResults(localResults);
 
-        // Step 2: Fetch from FlyonUI API (includes fuzzy search)
+        // Step 2: Fetch from Shadcn/studio API (includes fuzzy search)
         const apiResults = await fetchAndSearchBlocks(query, isValidated);
 
         if (apiResults.length > 0) {

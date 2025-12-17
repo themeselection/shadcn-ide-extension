@@ -1,7 +1,9 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FlyonUI">
-      <!-- Scaled glyph to better fill the 32x32 viewBox while keeping safe padding -->
-      <g transform="translate(16 16) scale(1.6) translate(-16 -16)">
-            <path d="M15.6 19.8C15.8 19.56 16.2 19.55 16.4 19.81L19.6 24.2C19.87 24.52 19.65 24.95 19.25 24.95H12.75C12.35 24.96 12.13 24.53 12.4 24.2L15.6 19.8ZM15.64 8.5C15.89 8.17 16.37 8.17 16.63 8.5L24.79 19.17C25.11 19.57 24.85 20.1 24.27 20.1H21.77C21.59 20.1 21.43 20.02 21.34 19.87L16.63 13.13C16.37 12.81 15.89 12.81 15.64 13.13L10.93 19.87C10.84 20.02 10.68 20.1 10.5 20.1H8.0C7.42 20.1 7.16 19.57 7.48 19.17L15.64 8.5Z" 
-                              fill="currentColor"/>
-      </g>
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="40" height="40" rx="20" transform="matrix(1 0 0 -1 0 40)" fill="currentColor" opacity="0.1"/>
+<path d="M20.2648 34V25.5378C20.2648 22.7555 18.0093 20.5 15.2269 20.5H7" stroke="currentColor" stroke-width="2.79879"/>
+<path d="M20.4896 7L20.4896 15.4622C20.4896 18.2445 22.7451 20.5 25.5274 20.5L33.7544 20.5" stroke="currentColor" stroke-width="2.79879"/>
+<line y1="-1.3994" x2="8.14036" y2="-1.3994" transform="matrix(-0.711279 -0.70291 -0.70291 0.711279 29.5129 31.2846)" stroke="currentColor" stroke-width="2.79879"/>
+<line y1="-1.3994" x2="8.14036" y2="-1.3994" transform="matrix(-0.711279 -0.70291 -0.70291 0.711279 15.1768 16.9914)" stroke="currentColor" stroke-width="2.79879"/>
+<line y1="-1.3994" x2="8.14036" y2="-1.3994" transform="matrix(-0.707107 0.707107 0.707107 0.707107 16.8704 25.8622)" stroke="currentColor" stroke-width="2.79879"/>
+<line y1="-1.3994" x2="8.14036" y2="-1.3994" transform="matrix(-0.707107 0.707107 0.707107 0.707107 31.4224 11.2694)" stroke="currentColor" stroke-width="2.79879"/>
 </svg>

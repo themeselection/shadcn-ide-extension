@@ -4,7 +4,7 @@
 const vscode = acquireVsCodeApi();
 
 // Get proUrl from global window variable (injected by TypeScript code)
-const proUrl = window.proUrl || 'https://flyonui.com/pro';
+const proUrl = window.proUrl || 'https://shadcnstudio.com#pricing';
 
 // Add event listeners when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {

@@ -698,7 +698,7 @@ export function AgentProvider({ children }: { children?: ReactNode }) {
 
                 // Only scan for agents once when connection is first lost
                 console.info(
-                  `[FlyonUI IDE Extension] Searching for available agents after connection loss...`,
+                  `[Shadcn/studio IDE Extension] Searching for available agents after connection loss...`,
                 );
                 scanAgents();
               } else {

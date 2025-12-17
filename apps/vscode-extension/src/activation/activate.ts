@@ -181,7 +181,7 @@ export async function activate(context: vscode.ExtensionContext) {
       'shadcn.openBlocksPanel',
       () => {
         vscode.window.showInformationMessage(
-          'shadcn/ui Blocks Panel is available in the sidebar. Look for the Shadcn/Studio icon in the Activity Bar.',
+          'shadcn/studio Blocks Panel is available in the sidebar. Look for the Shadcn/Studio icon in the Activity Bar.',
         );
       },
     );

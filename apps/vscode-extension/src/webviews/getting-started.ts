@@ -33,8 +33,8 @@ export function createGettingStartedPanel(
           terminal.sendText('npx flyonui-extension-cli@latest', false);
           break;
         }
-        case 'openApiPanel':
-          vscode.commands.executeCommand('flyonui.focusApiDataView');
+        case 'openBlocksPanel':
+          vscode.commands.executeCommand('shadcn.focusBlocksView');
           break;
         case 'openDiscord':
           vscode.env.openExternal(vscode.Uri.parse(message.url));

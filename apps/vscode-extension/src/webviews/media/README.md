@@ -101,7 +101,7 @@ To add a new webview following this pattern:
 
 2. **Update Webpack Config**: The CopyWebpackPlugin will automatically copy all files in the media directory
 
-3. **Create WebView Provider**: Follow the same pattern as `ApiDataProvider` to load external files
+3. **Create WebView Provider**: Follow the same pattern as `ShadcnBlocksProvider` to load external files
 
 4. **Update Package.json**: Add view container and commands if needed
 

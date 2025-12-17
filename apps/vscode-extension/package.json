@@ -24,49 +24,32 @@
   "contributes": {
     "commands": [
       {
-        "command": "flyonui.setAgent",
-        "title": "Set the preferred agent you want to use with FlyonUI",
-        "category": "FlyonUI"
-      },
-      {
-        "command": "flyonui.openDataPanel",
-        "title": "Open FlyonUI Blocks Panel",
-        "category": "FlyonUI"
-      },
-      {
-        "command": "flyonui.focusApiDataView",
-        "title": "Focus FlyonUI Blocks Panel",
-        "category": "FlyonUI"
+        "command": "shadcnstudio.setAgent",
+        "title": "Set the preferred agent you want to use with Shadcn/Studio",
+        "category": "Shadcn/Studio"
       },
       {
         "command": "shadcn.openBlocksPanel",
-        "title": "Open shadcn/ui Blocks Panel",
+        "title": "Open shadcn/studio Blocks Panel",
         "category": "shadcn"
       },
       {
         "command": "shadcn.focusBlocksView",
-        "title": "Focus shadcn/ui Blocks Panel",
+        "title": "Focus shadcn/studio Blocks Panel",
         "category": "shadcn"
       }
     ],
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "flyonui-sidebar",
-          "title": "FlyonUI Extension",
+          "id": "shadcnstudio-sidebar",
+          "title": "Shadcn/Studio Extension",
           "icon": "./icon.svg"
         }
       ]
     },
     "views": {
-      "flyonui-sidebar": [
-        {
-          "type": "webview",
-          "id": "flyonui.apiDataView",
-          "name": "Premium FlyonUI Blocks",
-          "icon": "$(rocket)",
-          "when": "true"
-        },
+      "shadcnstudio-sidebar": [
         {
           "type": "webview",
           "id": "shadcn.blocksView",
@@ -77,8 +60,8 @@
       ]
     },
     "icons": {
-      "flyonui-icon": {
-        "description": "FlyonUI icon",
+      "shadcnstudio-icon": {
+        "description": "Shadcn/Studio icon",
         "default": {
           "fontPath": "./stagewise-icons.woff",
           "fontCharacter": "\\E800"
@@ -87,10 +70,10 @@
     },
     "configuration": [
       {
-        "title": "FlyonUI",
+        "title": "Shadcn/Studio",
         "type": "object",
         "properties": {
-          "flyonui.telemetry.enabled": {
+          "shadcnstudio.telemetry.enabled": {
             "type": "boolean",
             "default": true,
             "description": "Enable anonymous usage data collection to help improve the product. No personal data is collected.",
@@ -98,19 +81,7 @@
               "telemetry",
               "usesOnlineServices"
             ],
-            "markdownDescription": "Enable anonymous usage data collection to help improve the product. No personal data is collected.\n\nRead more about our [telemetry data collection](https://github.com/themeselection/flyonui-extension/blob/main/apps/vscode-extension/TELEMETRY.md)."
-          }
-        }
-      },
-      {
-        "title": "FlyonUI",
-        "type": "object",
-        "properties": {
-          "flyonui.licenseKey": {
-            "type": "string",
-            "default": "",
-            "description": "Your FlyonUI Pro license key. Get your license at https://flyonui.com/pro",
-            "markdownDescription": "Your FlyonUI Pro license key. Get your license at [FlyonUI Pro](https://flyonui.com/pro)"
+            "markdownDescription": "Enable anonymous usage data collection to help improve the product. No personal data is collected.\n\nRead more about our [telemetry data collection](https://github.com/themeselection/shadcn-ide-extension/blob/main/apps/vscode-extension/TELEMETRY.md)."
           }
         }
       },
