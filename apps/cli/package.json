@@ -1,5 +1,5 @@
 {
-  "name": "shadcn-studio-cli",
+  "name": "shadcn-studio-extension-cli",
   "module": "src/index.ts",
   "type": "module",
   "version": "0.1.0",
@@ -12,7 +12,7 @@
   },
   "private": false,
   "bin": {
-    "shadcn-studio-cli": "dist/index.cjs"
+    "shadcn-studio-extension-cli": "dist/index.cjs"
   },
   "files": [
     "dist"
