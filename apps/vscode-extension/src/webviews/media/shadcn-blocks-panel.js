@@ -667,6 +667,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const licenseHeader = document.querySelector('.license-header');
   if (licenseHeader) {
     licenseHeader.addEventListener('click', toggleLicenseSection);
+    toggleLicenseSection(); // Start collapsed
   }
 
   // Save license button
