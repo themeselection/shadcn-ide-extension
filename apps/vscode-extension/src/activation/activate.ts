@@ -8,7 +8,7 @@ import { StorageService } from 'src/services/storage-service';
 import { VScodeContext } from 'src/services/vscode-context';
 import { WorkspaceService } from 'src/services/workspace-service';
 import { getCurrentIDE } from 'src/utils/get-current-ide';
-import { ApiDataProvider } from 'src/webviews/api-data-panel';
+
 import {
   createGettingStartedPanel,
   shouldShowGettingStarted,
@@ -22,10 +22,10 @@ let ideAgentInitialized = false;
 
 // Diagnostic collection specifically for our fake prompt
 const fakeDiagCollection =
-  vscode.languages.createDiagnosticCollection('flyonui');
+  vscode.languages.createDiagnosticCollection('shadcn-studio');
 
-// Create output channel for FlyonUI
-const outputChannel = vscode.window.createOutputChannel('FlyonUI');
+// Create output channel for Shadcn/Studio
+const outputChannel = vscode.window.createOutputChannel('Shadcn/Studio');
 
 // Handler for the setupToolbar command
 async function removeOldToolbarHandler() {
@@ -99,8 +99,8 @@ export async function activate(context: vscode.ExtensionContext) {
     // Add configuration change listener to track telemetry setting changes
     const configChangeListener = vscode.workspace.onDidChangeConfiguration(
       async (e) => {
-        if (e.affectsConfiguration('flyonui.telemetry.enabled')) {
-          const config = vscode.workspace.getConfiguration('flyonui');
+        if (e.affectsConfiguration('shadcnstudio.telemetry.enabled')) {
+          const config = vscode.workspace.getConfiguration('shadcnstudio');
           const telemetryEnabled = config.get<boolean>(
             'telemetry.enabled',
             true,
@@ -151,21 +151,12 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(workspaceFolderListener);
 
     const setAgentCommand = vscode.commands.registerCommand(
-      'flyonui.setAgent',
+      'shadcnstudio.setAgent',
       async () => {
         await agentSelectorService.showAgentPicker();
       },
     );
     context.subscriptions.push(setAgentCommand);
-
-    // Register the API Data webview provider for sidebar
-    const apiDataProvider = new ApiDataProvider(context.extensionUri);
-    context.subscriptions.push(
-      vscode.window.registerWebviewViewProvider(
-        ApiDataProvider.viewType,
-        apiDataProvider,
-      ),
-    );
 
     // Register the shadcn/ui Blocks webview provider for sidebar
     const shadcnBlocksProvider = new ShadcnBlocksProvider(context.extensionUri);
@@ -175,15 +166,6 @@ export async function activate(context: vscode.ExtensionContext) {
         shadcnBlocksProvider,
       ),
     );
-
-    // Command to focus the API Data view
-    const focusApiDataViewCommand = vscode.commands.registerCommand(
-      'flyonui.focusApiDataView',
-      async () => {
-        await vscode.commands.executeCommand('flyonui.apiDataView.focus');
-      },
-    );
-    context.subscriptions.push(focusApiDataViewCommand);
 
     // Command to focus the shadcn/ui Blocks view
     const focusShadcnBlocksViewCommand = vscode.commands.registerCommand(
@@ -199,22 +181,11 @@ export async function activate(context: vscode.ExtensionContext) {
       'shadcn.openBlocksPanel',
       () => {
         vscode.window.showInformationMessage(
-          'shadcn/ui Blocks Panel is available in the sidebar. Look for the FlyonUI icon in the Activity Bar.',
+          'shadcn/ui Blocks Panel is available in the sidebar. Look for the Shadcn/Studio icon in the Activity Bar.',
         );
       },
     );
     context.subscriptions.push(openShadcnBlocksPanelCommand);
-
-    // Keep the old command for backward compatibility (optional)
-    const disposablePanel = vscode.commands.registerCommand(
-      'flyonui.openDataPanel',
-      () => {
-        vscode.window.showInformationMessage(
-          'API Data Panel is now available in the sidebar. Look for the FlyonUI icon in the Activity Bar.',
-        );
-      },
-    );
-    context.subscriptions.push(disposablePanel);
   } catch (error) {
     console.error('Error during extension activation:', error);
   }

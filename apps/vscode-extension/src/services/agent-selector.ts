@@ -11,7 +11,7 @@ export class AgentSelectorService {
     | undefined;
   private storageService: StorageService = StorageService.getInstance();
 
-  private readonly PREFERRED_AGENT_STORAGE_KEY = 'flyonui.preferredAgent';
+  private readonly PREFERRED_AGENT_STORAGE_KEY = 'shadcnstudio.preferredAgent';
 
   private preferredAgent: PreferredAgent | undefined;
 
@@ -33,9 +33,9 @@ export class AgentSelectorService {
     );
 
     this.statusbar.tooltip =
-      'Set the preferred agent you want to use with FlyonUI';
-    this.statusbar.command = 'flyonui.setAgent';
-    this.updateStatusbarText('FlyonUI agent');
+      'Set the preferred agent you want to use with Shadcn/Studio';
+    this.statusbar.command = 'shadcnstudio.setAgent';
+    this.updateStatusbarText('Shadcn/Studio agent');
     this.statusbar.show();
 
     // load the preferred agent from the config
@@ -47,7 +47,7 @@ export class AgentSelectorService {
       return;
     }
 
-    this.statusbar.text = `$(flyonui-icon) ${text}`;
+    this.statusbar.text = `$(shadcnstudio-icon) ${text}`;
   }
 
   public async showAgentPicker() {
