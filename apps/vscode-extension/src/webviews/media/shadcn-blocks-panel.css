@@ -175,18 +175,39 @@ body {
   border: none;
   color: var(--vscode-foreground);
   cursor: pointer;
-  padding: 2px 6px;
+  padding: 4px 6px;
   font-size: 10px;
   opacity: 0.7;
-  transition: transform 0.2s ease;
+  transition: opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-toggle:hover {
   opacity: 1;
+  background: var(--vscode-toolbar-hoverBackground);
+  border-radius: 4px;
+}
+
+.btn-toggle:active {
+  opacity: 0.8;
+}
+
+.toggle-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.toggle-icon svg {
+  width: 16px;
+  height: 16px;
 }
 
 .btn-toggle.collapsed .toggle-icon {
-  transform: rotate(-90deg);
+  transform: rotate(-180deg);
 }
 
 .license-content {
@@ -863,7 +884,7 @@ body {
 
 .block-item-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
 }
@@ -873,12 +894,13 @@ body {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
 }
 
 .block-item-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--vscode-textLink-foreground);
+  font-size: 14px;
+  font-weight: 500;
   word-break: break-word;
 }
 
@@ -903,9 +925,9 @@ body {
 .block-item-actions {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 4px;
+  flex-wrap: nowrap;
   align-items: center;
+  flex-shrink: 0;
 }
 
 /* Icon button styles for blocks */
@@ -913,8 +935,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border: 1px solid var(--vscode-button-border);
   border-radius: 6px;
   background: var(--vscode-button-secondaryBackground);
@@ -937,8 +959,8 @@ body {
 }
 
 .block-item-actions .icon-btn svg {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   stroke: currentColor;
 }
 

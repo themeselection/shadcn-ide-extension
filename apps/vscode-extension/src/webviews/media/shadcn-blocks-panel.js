@@ -500,6 +500,11 @@ function renderSectionDetailsFiltered() {
       ${items
         .map((item) => {
           const imgUrl = `https://cdn.shadcnstudio.com/ss-assets/ide-extension/${item.meta?.category || ''}/${item.meta?.section || ''}/${item.name}.png?format=auto`;
+          const description = item.description || '';
+          const trimmedDescription =
+            description.length > 100
+              ? description.substring(0, 100) + '...'
+              : description;
           return `
         <div class="block-item">
           ${imgUrl ? `<img src="${imgUrl}" alt="${escapeHtml(item.name || 'Unknown Block')}" class="component-image" />` : ''}
@@ -507,29 +512,29 @@ function renderSectionDetailsFiltered() {
             <div class="block-name-wrapper">
               <span class="block-item-name">${searchQuery ? highlightMatches(item.meta?.title || 'Unknown Block', searchQuery) : escapeHtml(item.meta?.title || 'Unknown Block')}</span>
             </div>
+            <div class="block-item-actions">
+              <button class="icon-btn preview-btn" onclick="openExternalUrl('https://shadcnstudio.com/preview/${item.meta?.category || ''}/${item.meta?.section || ''}/${item.name}')" title="Preview block">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="14" height="14">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
+              </button>
+              <button class="icon-btn copy-btn copy-cmd-btn" data-item="${escapeHtml(item.name)}" title="Copy command">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </button>
+              <button class="icon-btn install-btn install-cmd-btn" data-item="${escapeHtml(item.name)}" title="Install block">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+              </button>
+            </div>
           </div>
-          ${item.description ? `<p class="block-item-description">${searchQuery ? highlightMatches(item.description, searchQuery) : escapeHtml(item.description)}</p>` : ''}
-          <div class="block-item-actions">
-            <button class="icon-btn preview-btn" onclick="openExternalUrl('https://shadcnstudio.com/preview/${item.meta?.category || ''}/${item.meta?.section || ''}/${item.name}')" title="Preview block">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="16" height="16">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-              </svg>
-            </button>
-            <button class="icon-btn copy-btn copy-cmd-btn" data-item="${escapeHtml(item.name)}" title="Copy command">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-              </svg>
-            </button>
-            <button class="icon-btn install-btn install-cmd-btn" data-item="${escapeHtml(item.name)}" title="Install block">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-            </button>
-          </div>
+          ${trimmedDescription ? `<p class="block-item-description">${escapeHtml(trimmedDescription)}</p>` : ''}
         </div>
       `;
         })
