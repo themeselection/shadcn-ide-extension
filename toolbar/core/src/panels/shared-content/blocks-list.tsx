@@ -68,7 +68,7 @@ export const BlocksList = forwardRef<BlocksListRef, BlocksListProps>(
     },
     ref,
   ) => {
-    const { licenseKey } = useLicenseKey();
+    const { isValidated } = useLicenseKey();
     const [recentBlocks, setRecentBlocks] = useState<BlockItem[]>([]);
 
     // Load recent blocks on mount
@@ -95,7 +95,7 @@ export const BlocksList = forwardRef<BlocksListRef, BlocksListProps>(
     const { searchResults, isSearching, searchError } = useBlockSearch(
       searchQuery || '',
       localBlocks,
-      { licenseKey, debounceMs: 500 },
+      { isValidated, debounceMs: 500 },
     );
 
     // Use search results from API if searching, otherwise use local blocks

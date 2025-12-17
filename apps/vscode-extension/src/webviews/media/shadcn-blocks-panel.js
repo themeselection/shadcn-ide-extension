@@ -386,7 +386,7 @@ function createSectionCardHtml(section) {
       <div class="section-card-content">
         <h3 class="section-card-title">${displayName}</h3>
         <div class="section-card-footer">
-          <span class="section-card-count">${section.count || 0} blocks</span>
+          <span class="section-card-count">${section.count || 0} ${section.count === 1 ? 'block' : 'blocks'}</span>
         </div>
       </div>
     </div>
@@ -500,11 +500,7 @@ function renderSectionDetailsFiltered() {
       ${items
         .map((item) => {
           const imgUrl = `https://cdn.shadcnstudio.com/ss-assets/ide-extension/${item.meta?.category || ''}/${item.meta?.section || ''}/${item.name}.png?format=auto`;
-          const description = item.description || '';
-          const trimmedDescription =
-            description.length > 100
-              ? description.substring(0, 100) + '...'
-              : description;
+
           return `
         <div class="block-item">
           ${imgUrl ? `<img src="${imgUrl}" alt="${escapeHtml(item.name || 'Unknown Block')}" class="component-image" />` : ''}
@@ -534,7 +530,6 @@ function renderSectionDetailsFiltered() {
               </button>
             </div>
           </div>
-          ${trimmedDescription ? `<p class="block-item-description">${escapeHtml(trimmedDescription)}</p>` : ''}
         </div>
       `;
         })

@@ -25,7 +25,7 @@ export interface MetaItem {
 }
 
 interface UseBlockSearchOptions {
-  licenseKey?: string;
+  isValidated?: boolean;
   debounceMs?: number;
   minScore?: number;
   maxResults?: number;
@@ -53,7 +53,11 @@ const performLocalSearch = (
   return localBlocksFuse.search(query).map((result) => result.item);
 };
 
-const fetchBlocksFromAPI = async () => {
+const filterProBlocks = (blocks: BlockItem[]): BlockItem[] => {
+  return blocks.filter((block) => block.meta?.isPro === false);
+};
+
+const fetchBlocksFromAPI = async (isValidated?: boolean) => {
   const fetchBlocksUrl =
     'https://shadcnstudio.com/r/blocks/registry.json?is_extension=true';
 
@@ -66,18 +70,27 @@ const fetchBlocksFromAPI = async () => {
       return [];
     }
     const data = await response.json();
+    let blocks = data.items as BlockItem[];
 
-    return data.items as BlockItem[];
+    // Filter Pro blocks if license is not validated
+    if (!isValidated) {
+      blocks = filterProBlocks(blocks);
+    }
+
+    return blocks;
   } catch (error) {
     console.warn('Error fetching blocks:', error);
     return [];
   }
 };
 
-const fetchAndSearchBlocks = async (query: string): Promise<BlockItem[]> => {
+const fetchAndSearchBlocks = async (
+  query: string,
+  isValidated?: boolean,
+): Promise<BlockItem[]> => {
   try {
     // Step 1: Fetch from the registry
-    const searchResults = await fetchBlocksFromAPI();
+    const searchResults = await fetchBlocksFromAPI(isValidated);
     if (searchResults.length === 0) {
       return [];
     }
@@ -121,7 +134,7 @@ export const useBlockSearch = (
   options: UseBlockSearchOptions = {},
 ): UseBlockSearchResult => {
   const {
-    licenseKey,
+    isValidated,
     debounceMs = 200,
     minScore = 0.35,
     maxResults = 20,
@@ -154,7 +167,7 @@ export const useBlockSearch = (
         setSearchResults(localResults);
 
         // Step 2: Fetch from FlyonUI API (includes fuzzy search)
-        const apiResults = await fetchAndSearchBlocks(query);
+        const apiResults = await fetchAndSearchBlocks(query, isValidated);
 
         if (apiResults.length > 0) {
           const combinedResults = [...apiResults, ...localResults];
@@ -175,7 +188,7 @@ export const useBlockSearch = (
     }, debounceMs);
 
     return () => clearTimeout(searchTimeout);
-  }, [searchQuery, localBlocks, licenseKey, debounceMs, minScore, maxResults]);
+  }, [searchQuery, localBlocks, isValidated, debounceMs, minScore, maxResults]);
 
   return {
     searchResults,

@@ -18,6 +18,15 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
   private _view?: vscode.WebviewView;
   private static readonly LICENSE_KEY = 'shadcn.licenseData';
 
+  private _licenseValidationCache: {
+    isValid: boolean;
+    timestamp: number;
+    email: string;
+    licenseKey: string;
+  } | null = null;
+
+  private readonly VALIDATION_CACHE_DURATION = 3600000; // 1 hour
+
   constructor(private readonly _extensionUri: vscode.Uri) {}
 
   public resolveWebviewView(
@@ -79,6 +88,35 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
           break;
       }
     });
+  }
+
+  private async _isLicenseValid(
+    email: string,
+    licenseKey: string,
+  ): Promise<boolean> {
+    // Check cache first
+    if (
+      this._licenseValidationCache &&
+      this._licenseValidationCache.email === email &&
+      this._licenseValidationCache.licenseKey === licenseKey &&
+      Date.now() - this._licenseValidationCache.timestamp <
+        this.VALIDATION_CACHE_DURATION
+    ) {
+      return this._licenseValidationCache.isValid;
+    }
+
+    // Validate with server
+    const isValid = await this._validateLicenseData(email, licenseKey);
+
+    // Update cache
+    this._licenseValidationCache = {
+      isValid,
+      timestamp: Date.now(),
+      email,
+      licenseKey,
+    };
+
+    return isValid;
   }
 
   private _getUserConfig = () => {
@@ -533,8 +571,23 @@ Follow these instructions to integrate this block:
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      // Filter to get only blocks data
       const registryData = (await response.json()) as { items: Item[] };
+
+      const { email, licenseKey } = this._getUserConfig();
+
+      // Determine whether we have credentials and whether they're valid.
+      const hasCredentials = Boolean(email && licenseKey);
+      const isValid = hasCredentials
+        ? await this._isLicenseValid(email, licenseKey)
+        : false;
+
+      // If there are no credentials or the credentials are invalid, filter out pro blocks
+      if (!hasCredentials || !isValid) {
+        registryData.items = registryData.items.filter((item: Item) => {
+          return item.meta?.isPro === false;
+        });
+      }
+
       const sectionsData = getSections(registryData.items);
 
       // Send data to webview
@@ -580,6 +633,9 @@ Follow these instructions to integrate this block:
           loading: true,
         });
       }
+      // get user details
+      const { email, licenseKey } = this._getUserConfig();
+
       // Fetch section details from shadcn API or registry
       const registryBlocksUrl =
         'https://shadcnstudio.com/r/blocks/registry.json?is_extension=true';
@@ -597,8 +653,21 @@ Follow these instructions to integrate this block:
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      // Filter to get only blocks data
       const registryData = (await response.json()) as { items: Item[] };
+
+      // Determine whether we have credentials and whether they're valid.
+      const hasCredentials = Boolean(email && licenseKey);
+      const isValid = hasCredentials
+        ? await this._isLicenseValid(email, licenseKey)
+        : false;
+
+      // If there are no credentials or the credentials are invalid, filter out pro blocks
+      if (!hasCredentials || !isValid) {
+        registryData.items = registryData.items.filter((item: Item) => {
+          return item.meta?.isPro === false;
+        });
+      }
+
       const sectionItems = getItemsBySection(registryData.items, sectionId);
 
       // Send data to webview
