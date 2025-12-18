@@ -184,6 +184,7 @@ function fetchSectionsData() {
 
 function refreshData() {
   fetchSectionsData();
+  fetchThemesData();
 }
 
 function openBlock(path, name) {
