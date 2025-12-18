@@ -174,7 +174,7 @@ export const useBlockSearch = (
           const uniqueResults = removeDuplicateBlocks(combinedResults);
 
           // Apply maxResults limit before updating state
-          setSearchResults(uniqueResults.slice(0, maxResults));
+          setSearchResults(uniqueResults);
         } else {
           console.log('No API results found, keeping local results only');
         }
