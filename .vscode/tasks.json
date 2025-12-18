@@ -9,7 +9,7 @@
         "run",
         "build",
         "--filter",
-        "shadcn-vscode-extension",
+        "shadcn-studio-vscode-extension",
         "--force"
       ],
       "group": "build",
