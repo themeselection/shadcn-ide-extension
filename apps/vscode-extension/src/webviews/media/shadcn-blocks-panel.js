@@ -221,14 +221,6 @@ function sendToIDEAgent(path, name) {
   });
 }
 
-function previewBlock(path, name) {
-  vscode.postMessage({
-    type: 'previewBlock',
-    path: path,
-    name: name,
-  });
-}
-
 function openExternalUrl(url) {
   vscode.postMessage({
     type: 'openExternalUrl',
@@ -684,14 +676,6 @@ document.addEventListener('DOMContentLoaded', () => {
     refreshBtn.addEventListener('click', refreshData);
   }
 
-  // Open docs button
-  const openDocsBtn = document.getElementById('openDocsBtn');
-  if (openDocsBtn) {
-    openDocsBtn.addEventListener('click', () => {
-      openExternalUrl('https://ui.shadcn.com/blocks');
-    });
-  }
-
   // Fetch blocks button
   const fetchSectionsBtn = document.getElementById('fetchSectionBtn');
   if (fetchSectionsBtn) {
@@ -707,16 +691,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const backBtn = document.getElementById('backBtn');
   if (backBtn) {
     backBtn.addEventListener('click', goBackToBlocks);
-  }
-
-  // Preview button
-  const previewBtn = document.getElementById('previewBtn');
-  if (previewBtn) {
-    previewBtn.addEventListener('click', () => {
-      if (currentBlockPath) {
-        previewBlock(currentBlockPath, currentBlockName);
-      }
-    });
   }
 
   // Send to agent button
@@ -777,7 +751,6 @@ window.setFilter = setFilter;
 window.goBackToBlocks = goBackToBlocks;
 window.copyInstallationCmd = copyInstallationCmd;
 window.sendToIDEAgent = sendToIDEAgent;
-window.previewBlock = previewBlock;
 window.fetchSectionsData = fetchSectionsData;
 window.saveLicense = saveLicense;
 window.toggleLicenseSection = toggleLicenseSection;

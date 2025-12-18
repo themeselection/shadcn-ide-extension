@@ -1,6 +1,5 @@
 import * as fs from 'node:fs';
 import * as vscode from 'vscode';
-import { dispatchAgentCall } from '../utils/dispatch-agent-call';
 import {
   getItemsBySection,
   getSections,
@@ -58,15 +57,6 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
         case 'copyToClipboard':
           await this._copyInstallationCommand(data.text, data.cliVersion);
           vscode.window.showInformationMessage('📋 Copied to clipboard!');
-          break;
-        case 'openBlock':
-          await this._fetchBlockDetails(data.path, data.name);
-          break;
-        case 'sendToIDEAgent':
-          await this._sendToIDEAgent(data.path, data.name);
-          break;
-        case 'previewBlock':
-          await this._previewBlock(data.path, data.name);
           break;
         case 'openExternalUrl':
           vscode.env.openExternal(vscode.Uri.parse(data.url));
@@ -240,16 +230,6 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
     }
   }
 
-  private async _previewBlock(path: string, _blockName: string) {
-    try {
-      // Open shadcn blocks preview in browser
-      const previewUrl = `https://ui.shadcn.com/blocks#${path}`;
-      vscode.env.openExternal(vscode.Uri.parse(previewUrl));
-    } catch (_error) {
-      vscode.window.showErrorMessage('Failed to open block preview');
-    }
-  }
-
   private async _fetchGenericThemes() {
     try {
       const themesUrl =
@@ -382,100 +362,6 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
     }
   }
 
-  private async _fetchBlockDetails(dataPath: string, blockName: string) {
-    // Show loading state
-    if (this._view) {
-      this._view.webview.postMessage({
-        type: 'blockDetailsLoading',
-        loading: true,
-      });
-    }
-
-    try {
-      // Fetch block details from shadcn API or registry
-      const url = `https://ui.shadcn.com/registry/blocks/${dataPath}.json`;
-
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const blockData: any = await response.json();
-
-      // Send data to webview
-      if (this._view) {
-        this._view.webview.postMessage({
-          type: 'blockDetailsReceived',
-          data: blockData,
-          blockName: blockName,
-          blockPath: dataPath,
-          loading: false,
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching shadcn block data:', error);
-      vscode.window.showErrorMessage(
-        'Failed to fetch block data from shadcn registry',
-      );
-
-      if (this._view) {
-        this._view.webview.postMessage({
-          type: 'blockDetailsReceived',
-          data: null,
-          blockName: blockName,
-          blockPath: dataPath,
-          loading: false,
-          error: 'Failed to fetch block data',
-        });
-      }
-    }
-  }
-
-  private async _fetchBlockCodeFromRegistry(
-    dataPath: string,
-  ): Promise<string | null> {
-    try {
-      const url = `https://ui.shadcn.com/registry/blocks/${dataPath}.json`;
-
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const blockData: any = await response.json();
-
-      // Extract code from the block data
-      if (blockData.files && blockData.files.length > 0) {
-        const codeBlocks = blockData.files.map((file: any) => {
-          return `// File: ${file.path}\n${file.content}`;
-        });
-        return codeBlocks.join('\n\n');
-      }
-
-      return null;
-    } catch (error) {
-      console.error('Error fetching block code from registry:', error);
-      vscode.window.showErrorMessage(
-        'Failed to fetch block code from shadcn registry',
-      );
-      return null;
-    }
-  }
-
   private async _copyInstallationCommand(
     command: string,
     CLIVersion: string,
@@ -492,53 +378,6 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
     vscode.window.showInformationMessage(
       '📋 Installation command copied to clipboard!',
     );
-  }
-
-  private async _sendToIDEAgent(
-    dataPath: string,
-    blockName: string,
-  ): Promise<void> {
-    try {
-      vscode.window.showInformationMessage(
-        '⏳ Fetching block code and sending to IDE agent...',
-      );
-
-      const code = await this._fetchBlockCodeFromRegistry(dataPath);
-
-      if (code) {
-        const prompt = `You need to integrate this shadcn/ui block "${blockName}" into this codebase.
-
-Here is the code for the block:
-
-\`\`\`tsx
-${code}
-\`\`\`
-
-Follow these instructions to integrate this block:
-1. Analyze the current codebase and the shadcn/ui block code to understand how it fits
-2. Explain what this block does and its components
-3. Check if all required shadcn/ui components are installed (use \`npx shadcn-ui@latest add <component>\` if needed)
-4. Identify any additional dependencies that need to be installed
-5. Create the necessary files and integrate the block into the codebase
-6. Make sure to follow the project's existing patterns and conventions
-`;
-
-        await dispatchAgentCall({
-          prompt: prompt,
-        });
-
-        vscode.window.showInformationMessage(
-          '🤖 Code sent to IDE agent successfully!',
-        );
-      } else {
-        vscode.window.showErrorMessage(
-          'Failed to fetch block code for IDE agent',
-        );
-      }
-    } catch (error) {
-      console.error('Error sending to IDE agent:', error);
-      vscode.window.showErrorMessage('Failed to send code to IDE agent');
-    }
   }
 
   private async _fetchSectionsData() {
