@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const openExtensionWindowBtn = document.getElementById('openExtensionWindow');
   if (openExtensionWindowBtn) {
     openExtensionWindowBtn.addEventListener('click', () => {
-      vscode.postMessage({ command: 'openApiPanel' });
+      vscode.postMessage({ command: 'openBlocksPanel' });
     });
   }
 
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const openProBtn = document.getElementById('openPro');
   if (openProBtn) {
     openProBtn.addEventListener('click', () => {
-      vscode.postMessage({ command: 'openDiscord', url: proUrl });
+      vscode.postMessage({ command: 'openUrl', url: proUrl });
     });
   }
 

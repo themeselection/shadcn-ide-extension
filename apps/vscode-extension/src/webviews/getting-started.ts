@@ -9,7 +9,7 @@ export function createGettingStartedPanel(
 ): vscode.WebviewPanel {
   const panel = vscode.window.createWebviewPanel(
     'stagewiseGettingStarted',
-    'Getting Started with FlyonUI IDE Extension',
+    'Getting Started with Shadcn Studio IDE Extension',
     vscode.ViewColumn.One,
     {
       enableScripts: true,
@@ -30,13 +30,13 @@ export function createGettingStartedPanel(
             cwd: vscode.workspace.workspaceFolders?.[0]?.uri.fsPath,
           });
           terminal.show();
-          terminal.sendText('npx flyonui-extension-cli@latest', false);
+          terminal.sendText('npx shadcn-studio-extension-cli@latest', false);
           break;
         }
         case 'openBlocksPanel':
           vscode.commands.executeCommand('shadcn.focusBlocksView');
           break;
-        case 'openDiscord':
+        case 'openUrl':
           vscode.env.openExternal(vscode.Uri.parse(message.url));
           break;
         case 'dismissPanel':

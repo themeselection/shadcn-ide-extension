@@ -56,14 +56,11 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
           await this._fetchSectionDetails(data.id, data.name);
           break;
         case 'copyToClipboard':
-          await vscode.env.clipboard.writeText(data.text);
+          await this._copyInstallationCommand(data.text, data.cliVersion);
           vscode.window.showInformationMessage('📋 Copied to clipboard!');
           break;
         case 'openBlock':
           await this._fetchBlockDetails(data.path, data.name);
-          break;
-        case 'copyBlockCode':
-          await this._copyBlockCode(data.path);
           break;
         case 'sendToIDEAgent':
           await this._sendToIDEAgent(data.path, data.name);
@@ -479,24 +476,22 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
     }
   }
 
-  private async _copyBlockCode(dataPath: string): Promise<void> {
-    try {
-      vscode.window.showInformationMessage('⏳ Fetching block code...');
-
-      const code = await this._fetchBlockCodeFromRegistry(dataPath);
-
-      if (code) {
-        await vscode.env.clipboard.writeText(code);
-        vscode.window.showInformationMessage(
-          '📋 Block code copied to clipboard!',
-        );
-      } else {
-        vscode.window.showErrorMessage('Failed to fetch block code');
-      }
-    } catch (error) {
-      console.error('Error copying block code:', error);
-      vscode.window.showErrorMessage('Failed to copy block code');
+  private async _copyInstallationCommand(
+    command: string,
+    CLIVersion: string,
+  ): Promise<void> {
+    if (CLIVersion === 'cli-v3') {
+      const installationCommand = command;
+      await vscode.env.clipboard.writeText(installationCommand);
+    } else {
+      const { email, licenseKey } = this._getUserConfig();
+      const installationCommand =
+        command + `?email=${email}&licenseKey=${licenseKey}"`;
+      await vscode.env.clipboard.writeText(installationCommand);
     }
+    vscode.window.showInformationMessage(
+      '📋 Installation command copied to clipboard!',
+    );
   }
 
   private async _sendToIDEAgent(

@@ -196,10 +196,11 @@ function openBlock(path, name) {
   });
 }
 
-function copyInstallationCmd(command) {
+function copyInstallationCmd(command, CLIVersion) {
   vscode.postMessage({
     type: 'copyToClipboard',
     text: command,
+    cliVersion: CLIVersion,
   });
 }
 
@@ -617,8 +618,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const command =
           CLIVersion === 'cli-v3'
             ? `npx shadcn@latest add @ss-blocks/${itemName}`
-            : `npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${itemName}"`;
-        copyInstallationCmd(command);
+            : `npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${itemName}`;
+        copyInstallationCmd(command, CLIVersion);
       }
     }
 
@@ -744,19 +745,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Footer links
-  const shadcnLink = document.getElementById('shadcnLink');
-  if (shadcnLink) {
-    shadcnLink.addEventListener('click', (e) => {
+  const shadcnStudioLink = document.getElementById('shadcnStudioLink');
+  if (shadcnStudioLink) {
+    shadcnStudioLink.addEventListener('click', (e) => {
       e.preventDefault();
-      openExternalUrl('https://ui.shadcn.com');
+      openExternalUrl('https://shadcnstudio.com');
     });
   }
 
-  const githubLink = document.getElementById('githubLink');
-  if (githubLink) {
-    githubLink.addEventListener('click', (e) => {
+  const getLicenseLink = document.getElementById('getLicenseLink');
+  if (getLicenseLink) {
+    getLicenseLink.addEventListener('click', (e) => {
       e.preventDefault();
-      openExternalUrl('https://github.com/shadcn-ui/ui');
+      openExternalUrl('https://shadcnstudio.com#pricing');
     });
   }
 
@@ -764,7 +765,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (docsLink) {
     docsLink.addEventListener('click', (e) => {
       e.preventDefault();
-      openExternalUrl('https://ui.shadcn.com/docs');
+      openExternalUrl('https://shadcnstudio.com/docs');
     });
   }
 });
