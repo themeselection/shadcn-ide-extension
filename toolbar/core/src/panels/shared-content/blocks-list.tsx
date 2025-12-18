@@ -464,10 +464,10 @@ export const BlocksList = forwardRef<BlocksListRef, BlocksListProps>(
             </div>
           </div>
         ) : (
-          <div className="px-1 py-2 text-muted-foreground text-xs">
+          <div className="px-1 py-2 text-center text-muted-foreground text-xs">
             {searchQuery?.trim()
               ? `No components found for "${searchQuery}"`
-              : 'No components found'}
+              : 'Try searching blocks like "Hero Section", "Pricing", etc.'}
           </div>
         )}
       </div>
