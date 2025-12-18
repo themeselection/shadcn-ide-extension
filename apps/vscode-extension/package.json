@@ -43,7 +43,7 @@
       "activitybar": [
         {
           "id": "shadcnstudio-sidebar",
-          "title": "Shadcn/Studio Extension",
+          "title": "Shadcn/Studio IDE Extension",
           "icon": "./icon.svg"
         }
       ]
@@ -53,7 +53,7 @@
         {
           "type": "webview",
           "id": "shadcn.blocksView",
-          "name": "shadcn/ui Blocks",
+          "name": "Blocks & Themes",
           "icon": "$(code)",
           "when": "true"
         }
