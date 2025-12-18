@@ -61,9 +61,9 @@ function getWebviewContent(
   const cspDomain =
     context.extensionMode === vscode.ExtensionMode.Development
       ? 'http://localhost:3000'
-      : 'https://flyonui.com';
+      : 'https://shadcnstudio.com';
 
-  const proUrl = 'https://flyonui.com/pro';
+  const proUrl = 'https://shadcnstudio.com#pricing';
 
   // Get path to media directory
   const mediaPath = vscode.Uri.joinPath(
@@ -82,7 +82,7 @@ function getWebviewContent(
     vscode.Uri.joinPath(mediaPath, 'getting-started.js'),
   );
 
-  // Get URI for the FlyonUI logo icon
+  // Get URI for the Shadcn Studio logo icon
   const iconUri = webview.asWebviewUri(
     vscode.Uri.joinPath(context.extensionUri, 'icon.png'),
   );
