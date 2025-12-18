@@ -4,13 +4,13 @@ import { Context7Logo } from './context7-logo';
 import { Logo as ShadcnStudioLogo } from './shadcn-studio-logo';
 
 interface AtMenuProps {
-  onSelect: (type: 'docs' | 'blocks' | 'shadcn-studio-docs' | 'themes') => void;
+  onSelect: (type: 'docs' | 'blocks' | 'themes') => void;
   onFocusReturn?: () => void;
   searchQuery?: string;
 }
 
 const options: Array<{
-  type: 'docs' | 'blocks' | 'shadcn-studio-docs' | 'themes';
+  type: 'docs' | 'blocks' | 'themes';
   label: string;
   Icon: 'Context7Logo' | 'ShadcnStudioLogo' | null;
 }> = [
@@ -18,11 +18,6 @@ const options: Array<{
     type: 'docs',
     label: 'Documentation',
     Icon: 'Context7Logo',
-  },
-  {
-    type: 'shadcn-studio-docs',
-    label: 'ShadcnStudio Docs',
-    Icon: 'ShadcnStudioLogo',
   },
   {
     type: 'blocks',
@@ -63,7 +58,7 @@ export function AtMenu({ onSelect, onFocusReturn, searchQuery }: AtMenuProps) {
   }, [filteredOptions.length]);
 
   const handleClick = useCallback(
-    (type: 'docs' | 'blocks' | 'shadcn-studio-docs' | 'themes') => {
+    (type: 'docs' | 'blocks' | 'themes') => {
       onSelect(type);
     },
     [onSelect],
