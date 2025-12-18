@@ -1,9 +1,8 @@
-<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="40" height="40" rx="20" transform="matrix(1 0 0 -1 0 40)" fill="currentColor" opacity="0.1"/>
-<path d="M20.2648 34V25.5378C20.2648 22.7555 18.0093 20.5 15.2269 20.5H7" stroke="currentColor" stroke-width="2.79879"/>
-<path d="M20.4896 7L20.4896 15.4622C20.4896 18.2445 22.7451 20.5 25.5274 20.5L33.7544 20.5" stroke="currentColor" stroke-width="2.79879"/>
-<line y1="-1.3994" x2="8.14036" y2="-1.3994" transform="matrix(-0.711279 -0.70291 -0.70291 0.711279 29.5129 31.2846)" stroke="currentColor" stroke-width="2.79879"/>
-<line y1="-1.3994" x2="8.14036" y2="-1.3994" transform="matrix(-0.711279 -0.70291 -0.70291 0.711279 15.1768 16.9914)" stroke="currentColor" stroke-width="2.79879"/>
-<line y1="-1.3994" x2="8.14036" y2="-1.3994" transform="matrix(-0.707107 0.707107 0.707107 0.707107 16.8704 25.8622)" stroke="currentColor" stroke-width="2.79879"/>
-<line y1="-1.3994" x2="8.14036" y2="-1.3994" transform="matrix(-0.707107 0.707107 0.707107 0.707107 31.4224 11.2694)" stroke="currentColor" stroke-width="2.79879"/>
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.06735e-06 23.5857L15.0438 23.5857C19.9902 23.5857 24 19.5759 24 14.6296L24 0.0039073" stroke="currentColor" stroke-width="4.97562"/>
+<path d="M48 23.9758L32.9562 23.9758C28.0098 23.9758 24 27.9856 24 32.932L24 47.5576" stroke="currentColor" stroke-width="4.97562"/>
+<line y1="-2.48781" x2="14.4717" y2="-2.48781" transform="matrix(0.70291 -0.711279 -0.711279 -0.70291 4.82715 40.0273)" stroke="currentColor" stroke-width="4.97562"/>
+<line y1="-2.48781" x2="14.4717" y2="-2.48781" transform="matrix(0.70291 -0.711279 -0.711279 -0.70291 30.2376 14.5273)" stroke="currentColor" stroke-width="4.97562"/>
+<line y1="-2.48781" x2="14.4717" y2="-2.48781" transform="matrix(-0.707107 -0.707107 -0.707107 0.707107 14.4673 17.5352)" stroke="currentColor" stroke-width="4.97562"/>
+<line y1="-2.48781" x2="14.4717" y2="-2.48781" transform="matrix(-0.707107 -0.707107 -0.707107 0.707107 40.4097 43.4141)" stroke="currentColor" stroke-width="4.97562"/>
 </svg>
