@@ -1,6 +1,6 @@
 import open from 'open';
 import { oauthManager } from './auth/oauth';
-import { configResolver } from './config';
+import { configResolver, DEFAULT_PORT } from './config';
 import {
   authSubcommand,
   commandExecuted,
@@ -53,7 +53,7 @@ async function main() {
           }
 
           try {
-            const port = 3100;
+            const port = DEFAULT_PORT;
             const tokenData = await oauthManager.initiateOAuthFlow(
               port,
               undefined,

@@ -13,6 +13,7 @@ import {
 } from './config-file';
 import type { Config, ConfigFile } from './types';
 
+export const DEFAULT_PORT = 3200;
 export class ConfigResolver {
   private config: Config | null = null;
   private authFlowInitiated = false;
@@ -78,7 +79,7 @@ export class ConfigResolver {
       }
 
       this.config = {
-        port: args.port || 3100,
+        port: args.port || DEFAULT_PORT,
         appPort,
         dir: args.workspace,
         silent: args.silent,
@@ -115,7 +116,7 @@ export class ConfigResolver {
     }
 
     // Merge configurations (CLI args override config file)
-    const port = args.port || configFile?.port || 3100;
+    const port = args.port || configFile?.port || DEFAULT_PORT;
     let appPort = args.appPort || configFile?.appPort;
     const autoPlugins = configFile?.autoPlugins ?? true;
     const plugins = configFile?.plugins ?? [];
