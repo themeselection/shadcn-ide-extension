@@ -225,6 +225,21 @@ async function main() {
 
     const { server } = await getServer();
 
+    // Check if app port is listening (if specified)
+    if (config.appPort) {
+      const { isPortListening } = await import('./utils/check-port.js');
+      const isAppPortAvailable = await isPortListening(config.appPort);
+
+      if (!isAppPortAvailable) {
+        log.warn(
+          `⚠️  Warning: App port ${config.appPort} is not responding. Make sure your application is running on port ${config.appPort}.`,
+        );
+        log.warn(
+          `   The Shadcn IDE Extension will still start, but proxying will not work until your app is running.`,
+        );
+      }
+    }
+
     // Start the server listening
     server.listen(config.port);
 

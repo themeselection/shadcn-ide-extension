@@ -1,8 +1,8 @@
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { configResolver } from '../config';
-import { errorPage } from './error-page';
 import { log } from '../utils/logger';
+import { errorPage } from './error-page';
 import { applyHeaderRewrites } from './proxy-utils/headers-rewrites';
 
 export const proxy = createProxyMiddleware({
@@ -41,9 +41,19 @@ export const proxy = createProxyMiddleware({
     // @ts-expect-error
     error: (err, _req, res: ServerResponse<IncomingMessage>) => {
       log.error(`Proxy error: ${err.message}`);
-      const config = configResolver.getConfig();
-      res.writeHead(503, { 'Content-Type': 'text/html' });
-      res.end(errorPage(config.appPort));
+
+      // Check if res is a valid ServerResponse and hasn't been ended
+      if (res && typeof res.writeHead === 'function' && !res.headersSent) {
+        try {
+          const config = configResolver.getConfig();
+          res.writeHead(503, { 'Content-Type': 'text/html' });
+          res.end(errorPage(config.appPort));
+        } catch (writeError) {
+          log.debug(
+            `Failed to send error response: ${writeError instanceof Error ? writeError.message : 'Unknown error'}`,
+          );
+        }
+      }
     },
     proxyRes: (proxyRes) => {
       applyHeaderRewrites(proxyRes);

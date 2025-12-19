@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import type { IncomingMessage } from 'node:http';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock dependencies
 vi.mock('http-proxy-middleware', () => ({
@@ -173,4 +173,77 @@ describe('proxy', () => {
       expect(callArgs!.xfwd).toBe(true);
     });
   });
-});
+
+  describe('error handler', () => {
+    let errorHandler: (err: Error, req: any, res: any) => void;
+
+    beforeEach(async () => {
+      const { configResolver } = await import('../../../src/config');
+      vi.mocked(configResolver.getConfig).mockReturnValue({
+        port: 3100,
+        appPort: 3000,
+        dir: '/test',
+        silent: false,
+        verbose: false,
+        bridgeMode: false,
+        autoPlugins: false,
+        plugins: [],
+        token: undefined,
+      } as any);
+
+      await import('../../../src/server/proxy');
+      const callArgs = vi.mocked(createProxyMiddleware).mock.calls[0]?.[0];
+      expect(callArgs?.on?.error).toBeDefined();
+      errorHandler = callArgs!.on!.error as any;
+    });
+
+    it('should handle error when response has writeHead method', () => {
+      const err = new Error('socket hang up');
+      const req = {} as any;
+      const res = {
+        writeHead: vi.fn(),
+        end: vi.fn(),
+        headersSent: false,
+      } as any;
+
+      errorHandler(err, req, res);
+
+      expect(res.writeHead).toHaveBeenCalledWith(503, {
+        'Content-Type': 'text/html',
+      });
+      expect(res.end).toHaveBeenCalled();
+    });
+
+    it('should not crash when response lacks writeHead method', () => {
+      const err = new Error('socket hang up');
+      const req = {} as any;
+      const res = {} as any; // No writeHead method
+
+      // Should not throw
+      expect(() => errorHandler(err, req, res)).not.toThrow();
+    });
+
+    it('should not write when headers already sent', () => {
+      const err = new Error('socket hang up');
+      const req = {} as any;
+      const res = {
+        writeHead: vi.fn(),
+        end: vi.fn(),
+        headersSent: true, // Headers already sent
+      } as any;
+
+      errorHandler(err, req, res);
+
+      expect(res.writeHead).not.toHaveBeenCalled();
+      expect(res.end).not.toHaveBeenCalled();
+    });
+
+    it('should handle null/undefined response gracefully', () => {
+      const err = new Error('socket hang up');
+      const req = {} as any;
+
+      // Should not throw with null or undefined response
+      expect(() => errorHandler(err, req, null as any)).not.toThrow();
+      expect(() => errorHandler(err, req, undefined as any)).not.toThrow();
+    });
+  });});
