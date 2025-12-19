@@ -2,7 +2,7 @@
   "name": "shadcn-studio-extension-cli",
   "module": "src/index.ts",
   "type": "module",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Shadcn/Studio Extension CLI",
   "author": "stagewise GmbH",
   "license": "AGPL-3.0-only",
