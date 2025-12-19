@@ -1,3 +1,4 @@
+import { getLicenseDataFromStorage } from '@/utils';
 import Fuse from 'fuse.js';
 import { useEffect, useState } from 'react';
 
@@ -47,7 +48,8 @@ const fetchGenericThemesFromAPI = async () => {
 };
 
 const fetchUserThemesFromAPI = async () => {
-  const fetchThemesUrl = `https://shadcnstudio.com/api/user-themes?email=dev@themeselection.com&license_key=BFC37484-BBD6-4B40-888E-DBDC50E176DE&is_extension=true`;
+  const { email, licenseKey } = getLicenseDataFromStorage();
+  const fetchThemesUrl = `https://shadcnstudio.com/api/user-themes?email=${email}&license_key=${licenseKey}&is_extension=true`;
   try {
     const response = await fetch(fetchThemesUrl, { method: 'GET' });
     if (!response.ok) {
