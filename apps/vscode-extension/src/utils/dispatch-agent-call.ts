@@ -1,5 +1,6 @@
 import type { PromptRequest } from '@stagewise/extension-toolbar-srpc-contract';
 import * as vscode from 'vscode';
+import { callAntigravityAgent } from './call-antigravity-agent';
 import { callClineAgent } from './call-cline-agent';
 import { callCopilotAgent } from './call-copilot-agent';
 import { callCursorAgent } from './call-cursor-agent';
@@ -22,6 +23,8 @@ export async function dispatchAgentCall(request: PromptRequest) {
       return await callCursorAgent(request);
     case 'WINDSURF':
       return await callWindsurfAgent(request);
+    case 'ANTIGRAVITY':
+      return await callAntigravityAgent(request);
     case 'VSCODE':
       if (isClineInstalled()) return await callClineAgent(request);
       if (isRoocodeInstalled()) return await callRoocodeAgent(request);

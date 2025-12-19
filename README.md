@@ -49,6 +49,7 @@ Apart from this, you can also access the Shadcn Studio Blocks & themes from the 
 | Cursor         | ✅             |
 | GitHub Copilot | ✅             |
 | Windsurf       | ✅             |
+| Antigravity    | ✅             |
 | Cline          | ✅             |
 | Roo Code       | ✅             |
 | Kilo Code      | ✅             |

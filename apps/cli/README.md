@@ -58,6 +58,7 @@ And simply follow the short guide of the CLI app to setup your stagewise account
 | Cursor         | ✅             |
 | GitHub Copilot | ✅             |
 | Windsurf       | ✅             |
+| Antigravity    | ✅             |
 | Cline          | ✅             |
 | Roo Code       | ✅             |
 | Kilo Code      | ✅             |
