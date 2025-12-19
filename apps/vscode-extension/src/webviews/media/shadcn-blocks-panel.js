@@ -583,6 +583,7 @@ window.addEventListener('message', (event) => {
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize license data
   initializeLicense();
+  fetchSectionsData();
 
   // Main tab switching
   const mainTabs = document.querySelectorAll('.main-tab');
