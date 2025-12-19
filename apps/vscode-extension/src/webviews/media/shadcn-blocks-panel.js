@@ -84,19 +84,13 @@ function updateLicenseUI(data) {
 }
 
 function updateLicenseStatus(isActive) {
-  const statusDot = document.querySelector('.status-dot');
-  const statusText = document.querySelector('.status-text');
-
-  if (statusDot && statusText) {
-    if (isActive) {
-      statusDot.classList.remove('inactive');
-      statusDot.classList.add('active');
-      statusText.textContent = 'License configured';
-    } else {
-      statusDot.classList.remove('active');
-      statusDot.classList.add('inactive');
-      statusText.textContent = 'No license configured';
-    }
+  const statusText = document.getElementById('licenseStatusText');
+  const licenseStatus = document.getElementById('licenseStatus');
+  if (isActive) {
+    licenseStatus.style.display = 'none';
+  } else {
+    statusText.innerHTML =
+      '<p>No license found. <a href="https://shadcnstudio.com#pricing" target="_blank">Upgrade to Pro</a> for premium resources, if already upgraded, Add your <a href="https://shadcnstudio.com/billing" target="_blank">Credentials</a> below.</p>';
   }
 }
 
