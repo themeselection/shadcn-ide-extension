@@ -483,7 +483,7 @@ export const getLicenseDataFromStorage = (): {
   licenseKey: string | null;
 } => {
   try {
-    const stored = localStorage.getItem('ShadcnStudio_license_key');
+    const stored = localStorage.getItem('shadcnstudio_license_key');
     if (stored) {
       const parsed = JSON.parse(stored);
       return {
