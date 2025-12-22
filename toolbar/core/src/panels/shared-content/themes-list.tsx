@@ -28,7 +28,7 @@ export interface ThemesListRef {
   selectActiveTheme: () => boolean;
 }
 
-const RECENT_THEMES_KEY = 'toolbar-themes-recent';
+const RECENT_THEMES_KEY = 'shadcnstudio-`toolbar-themes-recent';
 
 // Helper functions for localStorage
 const getRecentThemes = (): ThemeItem[] => {
