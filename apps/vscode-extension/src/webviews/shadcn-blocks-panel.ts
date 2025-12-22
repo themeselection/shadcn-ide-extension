@@ -177,8 +177,8 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
 
   private async _openTerminalandInstall(command: string, cliVersion: string) {
     try {
-      const terminal =
-        vscode.window.activeTerminal || vscode.window.createTerminal();
+      // Always open a new terminal to avoid conflicts
+      const terminal = vscode.window.createTerminal();
       terminal.show();
       if (terminal) {
         const { email, licenseKey } = this._getUserConfig();
