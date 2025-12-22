@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import { build } from 'esbuild';
+import { exec } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import { cp, mkdir, writeFile } from 'node:fs/promises';
+import { builtinModules } from 'node:module';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { cp, mkdir, writeFile } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
-import { builtinModules } from 'node:module';
-import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
 
 const execAsync = promisify(exec);
@@ -46,6 +46,14 @@ async function buildCLI() {
   try {
     // Ensure dist directory exists
     await mkdir('dist', { recursive: true });
+
+    // Read version from package.json
+    const packageJson = JSON.parse(
+      await import('node:fs/promises').then((fs) =>
+        fs.readFile(resolve(__dirname, 'package.json'), 'utf-8'),
+      ),
+    );
+    const version = packageJson.version;
 
     // Only keep external the packages that have issues with bundling
     const externalPackages: string[] = [];
@@ -88,6 +96,7 @@ const import_meta_url = require('url').pathToFileURL(__filename).href;
         'process.env.API_URL': JSON.stringify(
           process.env.API_URL ?? 'https://api.stagewise.io',
         ),
+        __CLI_VERSION__: JSON.stringify(version),
       },
       sourcemap: true,
       minify: process.env.NODE_ENV === 'production',

@@ -4,11 +4,18 @@ import { dirname, join } from 'node:path';
 import { text } from 'node:stream/consumers';
 import { fileURLToPath } from 'node:url';
 
+// Version is injected at build time by esbuild
+declare const __CLI_VERSION__: string;
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export function getVersion(): string {
   try {
-    // Read package.json to get version
+    // In production builds, __CLI_VERSION__ is defined by esbuild
+    if (typeof __CLI_VERSION__ !== 'undefined') {
+      return __CLI_VERSION__;
+    }
+    // Fallback for dev mode - read from package.json
     const packageJsonPath = join(__dirname, '../../package.json');
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
     return packageJson.version;
