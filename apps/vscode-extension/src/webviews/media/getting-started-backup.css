@@ -71,11 +71,6 @@ body {
     font-weight: 400;
 }
 
-/* Sections */
-section {
-    margin-bottom: 40px;
-}
-
 .section-header {
     display: flex;
     align-items: center;
@@ -125,14 +120,6 @@ section h2 {
 }
 
 .step-content {
-    flex: 1;
-}
-
-.step-content p {
-    margin: 0 0 16px 0;
-    color: var(--text-muted);
-    font-size: 14px;
-}
 
 .command-box {
     display: flex;
@@ -327,7 +314,47 @@ button:active {
 .btn-dismiss:hover {
     background: var(--background-muted);
     color: var(--text-color);
-    border-color: var(--text-color);
+    border-color: var(--text
+.btn-secondary {
+    background: var(--background-muted);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--border-color);
+}
+
+.btn-link {
+    background: none;
+    color: var(--primary-color);
+    border: 1px solid transparent;
+    padding: 8px 12px;
+}
+
+.btn-link:hover {
+    background: var(--background-muted);
+    border-color: var(--border-color);
+}
+
+/* Footer */
+.footer {
+    border-top: 1px solid var(--border-color);
+    padding: 24px 0 0;
+    text-align: center;
+}
+
+.btn-dismiss {
+    background: none;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    font-size: 13px;
+    padding: 8px 16px;
+}
+
+.btn-dismiss:hover {
+    background: var(--background-muted);
+    color: var(--text-color);
 }
 
 /* Responsive */
