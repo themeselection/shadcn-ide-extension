@@ -132,7 +132,7 @@ const createToolbarHtmlHandler =
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Shadcn IDE Extension</title>
+    <title>Shadcn Studio IDE Extension</title>
     <link rel="preconnect" href="https://rsms.me/">
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script type="importmap">${JSON.stringify(importMap)}</script>

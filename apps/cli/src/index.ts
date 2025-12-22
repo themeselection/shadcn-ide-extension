@@ -235,7 +235,7 @@ async function main() {
           `⚠️  Warning: App port ${config.appPort} is not responding. Make sure your application is running on port ${config.appPort}.`,
         );
         log.warn(
-          `   The Shadcn IDE Extension will still start, but proxying will not work until your app is running.`,
+          `   The Shadcn Studio IDE Extension will still start, but proxying will not work until your app is running.`,
         );
       }
     }
@@ -249,7 +249,7 @@ async function main() {
         typeof address === 'object' && address ? address.port : config.port;
       const serverUrl = `http://localhost:${port}`;
 
-      log.info(`✓  Shadcn IDE Extension is running on ${serverUrl}`);
+      log.info(`✓  Shadcn Studio IDE Extension is running on ${serverUrl}`);
       if (config.appPort) {
         log.info(`✓ Proxying app from port ${config.appPort}`);
       }

@@ -233,7 +233,7 @@ async function scanForAgents(
   startPort: number = DEFAULT_STARTING_PORT,
 ): Promise<AgentInfo[]> {
   console.info(
-    "[Shadcn IDE Extension] The following errors are expected ✅\n\nThey happen because we're searching for available agents...",
+    "[Shadcn Studio IDE Extension] The following errors are expected ✅\n\nThey happen because we're searching for available agents...",
   );
   console.debug(
     `[AgentProvider] Starting agent scan from port ${startPort}...`,
