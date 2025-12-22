@@ -93,9 +93,9 @@ export function LicenseKeyManager() {
             <ShieldCheckIcon className="h-4 w-4 text-foreground" />
             <h3 className="font-medium text-foreground text-sm">Pro License</h3>
           </div>
-          <div className="flex h-5 items-center rounded-full bg-zinc-100 px-2.5 py-0.5 dark:bg-zinc-800/50">
-            <CheckCircleIcon className="mr-1 h-3 w-3 text-zinc-600 dark:text-zinc-400" />
-            <span className="font-medium text-xs text-zinc-700 dark:text-zinc-300">
+          <div className="flex h-5 items-center rounded-full bg-green-100 px-2.5 py-0.5 dark:bg-green-900/30">
+            <CheckCircleIcon className="mr-1 h-3 w-3 text-green-600 dark:text-green-400" />
+            <span className="font-medium text-green-700 text-xs dark:text-green-300">
               Active
             </span>
           </div>
@@ -153,7 +153,7 @@ export function LicenseKeyManager() {
                   size="sm"
                   variant="ghost"
                   onClick={handleRemoveLicense}
-                  className="h-6 px-2 text-xs text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300"
+                  className="h-6 px-2 text-red-600 text-xs hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-900/20 dark:hover:text-red-300"
                 >
                   <TrashIcon className="mr-1 h-3 w-3" />
                   Remove
