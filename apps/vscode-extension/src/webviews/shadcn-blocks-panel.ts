@@ -375,9 +375,6 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
         command + `?email=${email}&licenseKey=${licenseKey}"`;
       await vscode.env.clipboard.writeText(installationCommand);
     }
-    vscode.window.showInformationMessage(
-      '📋 Installation command copied to clipboard!',
-    );
   }
 
   private async _fetchSectionsData() {
