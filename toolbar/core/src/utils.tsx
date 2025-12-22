@@ -532,7 +532,7 @@ export const getSelectedThemeInfo = (
 
   const themeInstallCommand =
     cliVersion === 'v3'
-      ? `npx shadcn@latest add theme ${theme.name}`
+      ? `npx shadcn@latest add @ss-themes/${theme.name}`
       : `npx shadcn@latest add "https://shadcnstudio.com/r/themes/${theme.name}.json?email=${email}&license_key=${licenseKey}"`;
 
   return {
