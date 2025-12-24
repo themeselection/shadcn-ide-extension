@@ -505,7 +505,9 @@ export const getSelectedBlockInfo = (
   const blockInstallationCmd =
     cliVersion === 'v3'
       ? `npx shadcn@latest add @ss-blocks/${block.name}`
-      : `npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${block.name}.json?email=${email}&license_key=${licenseKey}"`;
+      : email && licenseKey
+        ? `npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${block.name}.json?email=${email}&license_key=${licenseKey}"`
+        : `npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${block.name}.json`;
 
   return {
     name: block.name,
@@ -533,7 +535,9 @@ export const getSelectedThemeInfo = (
   const themeInstallCommand =
     cliVersion === 'v3'
       ? `npx shadcn@latest add @ss-themes/${theme.name}`
-      : `npx shadcn@latest add "https://shadcnstudio.com/r/themes/${theme.name}.json?email=${email}&license_key=${licenseKey}"`;
+      : email && licenseKey
+        ? `npx shadcn@latest add "https://shadcnstudio.com/r/themes/${theme.name}.json?email=${email}&license_key=${licenseKey}"`
+        : `npx shadcn@latest add "https://shadcnstudio.com/r/themes/${theme.name}.json`;
 
   return {
     name: theme.name,

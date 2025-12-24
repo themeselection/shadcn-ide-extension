@@ -30,7 +30,7 @@ export function createGettingStartedPanel(
             cwd: vscode.workspace.workspaceFolders?.[0]?.uri.fsPath,
           });
           terminal.show();
-          terminal.sendText('npx shadcn-studio-extension-cli@latest', false);
+          terminal.sendText('npx shadcn-studio-extension-cli@latest', true);
           break;
         }
         case 'openBlocksPanel':
