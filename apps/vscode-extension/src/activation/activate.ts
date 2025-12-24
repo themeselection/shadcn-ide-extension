@@ -176,16 +176,15 @@ export async function activate(context: vscode.ExtensionContext) {
     );
     context.subscriptions.push(focusShadcnBlocksViewCommand);
 
-    // Command to open shadcn blocks panel (backward compatibility)
-    const openShadcnBlocksPanelCommand = vscode.commands.registerCommand(
-      'shadcn.openBlocksPanel',
-      () => {
-        vscode.window.showInformationMessage(
-          'shadcn/studio Blocks Panel is available in the sidebar. Look for the Shadcn/Studio icon in the Activity Bar.',
-        );
+    // Command to show getting started panel
+    const showGettingStartedCommand = vscode.commands.registerCommand(
+      'shadcnstudio.showGettingStarted',
+      async () => {
+        analyticsService.trackEvent(EventName.GETTING_STARTED_PANEL_SHOWN);
+        createGettingStartedPanel(context, storage);
       },
     );
-    context.subscriptions.push(openShadcnBlocksPanelCommand);
+    context.subscriptions.push(showGettingStartedCommand);
   } catch (error) {
     console.error('Error during extension activation:', error);
   }

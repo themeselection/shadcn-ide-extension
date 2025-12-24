@@ -29,14 +29,14 @@
         "category": "Shadcn/Studio"
       },
       {
-        "command": "shadcn.openBlocksPanel",
-        "title": "Open shadcn/studio Blocks Panel",
-        "category": "shadcn"
-      },
-      {
         "command": "shadcn.focusBlocksView",
         "title": "Focus shadcn/studio Blocks Panel",
         "category": "shadcn"
+      },
+      {
+        "command": "shadcnstudio.showGettingStarted",
+        "title": "Show Getting Started Guide",
+        "category": "Shadcn/Studio"
       }
     ],
     "viewsContainers": {
