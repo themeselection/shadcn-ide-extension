@@ -507,7 +507,7 @@ export const getSelectedBlockInfo = (
       ? `npx shadcn@latest add @ss-blocks/${block.name}`
       : email && licenseKey
         ? `npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${block.name}.json?email=${email}&license_key=${licenseKey}"`
-        : `npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${block.name}.json`;
+        : `npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${block.name}.json"`;
 
   return {
     name: block.name,
@@ -537,7 +537,7 @@ export const getSelectedThemeInfo = (
       ? `npx shadcn@latest add @ss-themes/${theme.name}`
       : email && licenseKey
         ? `npx shadcn@latest add "https://shadcnstudio.com/r/themes/${theme.name}.json?email=${email}&license_key=${licenseKey}"`
-        : `npx shadcn@latest add "https://shadcnstudio.com/r/themes/${theme.name}.json`;
+        : `npx shadcn@latest add "https://shadcnstudio.com/r/themes/${theme.name}.json"`;
 
   return {
     name: theme.name,

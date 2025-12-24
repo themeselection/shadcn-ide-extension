@@ -188,7 +188,7 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
             ? command
             : email && licenseKey
               ? command + `?email=${email}&license_key=${licenseKey}"`
-              : command;
+              : command + `"`;
         terminal.sendText(commandToSend, true);
         vscode.window.showInformationMessage(
           'Terminal opened and command sent!',
@@ -376,7 +376,7 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
       const installationCommand =
         email && licenseKey
           ? command + `?email=${email}&license_key=${licenseKey}"`
-          : command;
+          : command + `"`;
       await vscode.env.clipboard.writeText(installationCommand);
     }
   }

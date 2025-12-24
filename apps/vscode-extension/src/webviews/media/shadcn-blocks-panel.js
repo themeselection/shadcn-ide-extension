@@ -605,7 +605,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const command =
           CLIVersion === 'cli-v3'
             ? `npx shadcn@latest add @ss-blocks/${itemName}`
-            : `npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${itemName}`;
+            : `npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${itemName}.json`;
         copyInstallationCmd(command, CLIVersion);
       }
     }
@@ -637,7 +637,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const command =
           CLIVersion === 'cli-v3'
             ? `npx shadcn@latest add @ss-blocks/${itemName}`
-            : `npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${itemName}`;
+            : `npx shadcn@latest add "https://shadcnstudio.com/r/blocks/${itemName}.json`;
         installCmd(command, CLIVersion);
       }
     }
