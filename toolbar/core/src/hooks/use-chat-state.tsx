@@ -368,6 +368,7 @@ export const ChatStateProvider = ({ children }: ChatStateProviderProps) => {
       setDomContextElements([]);
       setSelectedDocs([]);
       setSelectedBlocks([]);
+      setSelectedThemes([]);
       setIsPromptCreationMode(false);
     } finally {
       setIsSending(false);
