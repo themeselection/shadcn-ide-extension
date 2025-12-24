@@ -4,7 +4,7 @@ export function NoAgentFound() {
       <p className="font-medium">To connect:</p>
       <ol className="list-inside list-decimal space-y-1 pl-2 text-sm">
         <li>Open your IDE (Cursor, Windsurf, Antigravity, etc.)</li>
-        <li>Install the stagewise extension</li>
+        <li>Install the Shadcn Studio IDE extension</li>
         <li>Make sure the extension is active</li>
         <li>Click refresh in the toolbar</li>
       </ol>

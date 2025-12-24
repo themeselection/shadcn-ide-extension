@@ -70,13 +70,17 @@ export function AgentSelection({
         id="agent-select"
         value={connected?.port || ''}
         onChange={handleAgentChange}
-        className="h-8 w-full rounded-lg border border-zinc-950/10 bg-zinc-500/10 px-2 text-sm ring-1 ring-white/20 focus:border-zinc-500 focus:outline-none"
+        className="h-8 w-full rounded-lg border border-zinc-950/10 bg-zinc-500/10 px-2 text-foreground text-sm ring-1 ring-white/20 focus:border-zinc-500 focus:outline-none [&>option:disabled]:text-muted-foreground [&>option]:bg-background [&>option]:text-foreground"
       >
-        <option value="" disabled>
+        <option value="" disabled className="text-muted-foreground">
           {placeholderText}
         </option>
         {availableAgents.map((agent) => (
-          <option key={agent.port} value={agent.port}>
+          <option
+            key={agent.port}
+            value={agent.port}
+            className="text-foreground"
+          >
             {agent.description}({agent.name})
           </option>
         ))}
