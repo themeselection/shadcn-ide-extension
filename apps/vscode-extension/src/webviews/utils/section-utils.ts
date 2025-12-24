@@ -69,12 +69,14 @@ export const getImageForSection = (sectionId: string): string => {
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/features-section/features-section-12.png?format=auto',
     'footer-component':
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/footer-component/footer-component-02.png?format=auto',
-    'forgot-password': '',
+    'forgot-password':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/forgot-password/forgot-password-01.png?format=auto',
     'gallery-component':
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/gallery-component/gallery-component-05.png?format=auto',
     'hero-section':
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/hero-section/hero-section-23.png?format=auto',
-    'login-page': '',
+    'login-page':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/login-page/login-page-02.png?format=auto',
     'logo-cloud':
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/logo-cloud/logo-cloud-06.png?format=auto',
     'navbar-component':
@@ -85,7 +87,8 @@ export const getImageForSection = (sectionId: string): string => {
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/pricing-component/pricing-component-15.png?format=auto',
     register:
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/register/register-01.png?format=auto',
-    'reset-password': '',
+    'reset-password':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/verify-email/verify-email-04.png?format=auto',
     'social-proof':
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/social-proof/social-proof-11.png?format=auto',
     'team-section':
@@ -94,34 +97,46 @@ export const getImageForSection = (sectionId: string): string => {
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/testimonials-component/testimonials-component-19.png?format=auto',
     'two-factor-authentication':
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/two-factor-authentication/two-factor-authentication-01.png?format=auto',
-    'verify-email': '',
-    'application-shell': '',
+    'verify-email':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/marketing-ui/verify-email/verify-email-04.png?format=auto',
+    'application-shell':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/dashboard-and-application/application-shell/application-shell-10.png?format=auto',
     'charts-component':
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/dashboard-and-application/charts-component/chart-component-09.png?format=auto',
-    'dashboard-dialog': '',
+    'dashboard-dialog':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/dashboard-and-application/dashboard-dialog/dashboard-dialog-02.png?format=auto',
     'dashboard-shell':
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/dashboard-and-application/dashboard-shell/dashboard-shell-01.png?format=auto',
-    'dashboard-dropdown': '',
-    'dashboard-footer': '',
-    'dashboard-header': '',
-    'dashboard-sidebar': '',
-    'multi-step-form': '',
+    'dashboard-dropdown':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/dashboard-and-application/dashboard-dropdown/dashboard-dropdown-10.png?format=auto',
+    'dashboard-footer':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/dashboard-and-application/dashboard-footer/dashboard-footer-04.png?format=auto',
+    'dashboard-header':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/dashboard-and-application/dashboard-header/dashboard-header-17.png?format=auto',
+    'dashboard-sidebar':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/dashboard-and-application/dashboard-sidebar/dashboard-sidebar-06.png?format=auto',
+    'multi-step-form':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/dashboard-and-application/multi-step-form/multi-step-form-01.png?format=auto',
     'statistics-component':
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/dashboard-and-application/statistics-component/statistics-component-04.png?format=auto',
     'widgets-component':
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/dashboard-and-application/widgets-component/widget-component-01.png?format=auto',
-    'datatable-component': '',
+    'datatable-component':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/datatable/datatable-component/datatable-component-01.png?format=auto',
     'bento-grid':
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/bento-grid/bento-grid/bento-grid-14.png?format=auto',
-    'category-filter': '',
+    'category-filter':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/ecommerce/category-filter/category-filter-03.png?format=auto',
     'checkout-page':
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/ecommerce/checkout-page/checkout-page-01.png?format=auto',
     'mega-footer':
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/ecommerce/mega-footer/mega-footer-02.png?format=auto',
-    'offer-modal': '',
+    'offer-modal':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/ecommerce/offer-modal/offer-modal-01.png?format=auto',
     'order-summary':
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/ecommerce/order-summary/order-summary-01.png?format=auto',
-    'shopping-cart': '',
+    'shopping-cart':
+      'https://cdn.shadcnstudio.com/ss-assets/ide-extension/ecommerce/shopping-cart/shopping-cart-01.png?format=auto',
     'product-reviews':
       'https://cdn.shadcnstudio.com/ss-assets/ide-extension/ecommerce/product-reviews/product-reviews-03.png?format=auto',
     'product-quick-view':
