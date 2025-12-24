@@ -114,8 +114,9 @@ export function AppStateProvider({ children }: { children?: ReactNode }) {
       minimized: state.minimized,
       theme: state.theme,
       promptAction: state.promptAction,
+      cliVersion: state.cliVersion,
     });
-  }, [state.minimized, state.theme, state.promptAction]);
+  }, [state.minimized, state.theme, state.promptAction, state.cliVersion]);
 
   // Apply theme to DOM
   useEffect(() => {
