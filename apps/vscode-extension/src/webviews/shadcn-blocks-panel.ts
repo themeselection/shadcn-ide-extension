@@ -137,8 +137,6 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
         data.licenseKey,
       );
 
-      console.log('License validation result:', isLicenseValid);
-
       if (isLicenseValid) {
         await config.update(
           'licenseEmail',
