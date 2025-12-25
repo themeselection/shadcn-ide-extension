@@ -75,7 +75,9 @@ For more information on the license model, visit the [FAQ about the GNU Licenses
 
 ## Useful Links 🎁
 
-- [Shadcn Components](https://shadcnstudio.com/blocks)
+- [Shadcn Blocks](https://shadcnstudio.com/blocks)
+- [Shadcn Components](https://shadcnstudio.com/components)
+- [Shadcn ThemeGenerator](https://shadcnstudio.com/theme-generator)
 - [Shadcn Templates](https://shadcnstudio.com/templates)
 - [Shadcn figma design system](https://shadcnstudio.com/figma)
 - [Shadcn AI Builder](https://shadcnstudio.com/mcp)
