@@ -3,7 +3,7 @@
   "displayName": "Shadcn Studio IDE Extension",
   "private": true,
   "description": "Edit Your UI With a Prompt.",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "publisher": "themeselection",
   "icon": "icon.png",
   "engines": {
