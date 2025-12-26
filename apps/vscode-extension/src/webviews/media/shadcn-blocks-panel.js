@@ -734,7 +734,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (docsLink) {
     docsLink.addEventListener('click', (e) => {
       e.preventDefault();
-      openExternalUrl('https://shadcnstudio.com/docs');
+      openExternalUrl(
+        'https://shadcnstudio.com/docs/getting-started/shadcn-studio-ide-extension',
+      );
     });
   }
 });
