@@ -64,14 +64,14 @@ export function LicenseKeyDialog({
       // Validate the license key format
       const isValid = await validateLicenseKey(inputKey.trim(), email.trim());
 
-      if (isValid) {
+      console.log('License key validation result:', isValid);
+      if (isValid.isValid) {
         await saveLicenseKey(inputKey.trim(), email.trim());
         setInputKey('');
         onClose();
       } else {
-        setValidationError(
-          'Invalid license key or Email. Please check and try again.',
-        );
+        console.log('License key validation failed:', isValid);
+        setValidationError(isValid.message || 'Invalid license key or Email');
       }
     } catch (error) {
       setValidationError(

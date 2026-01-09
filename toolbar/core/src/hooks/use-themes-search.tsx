@@ -11,6 +11,9 @@ export interface ThemeItem {
     light: Record<string, string>;
     dark: Record<string, string>;
   };
+  meta?: {
+    isPro: boolean;
+  };
 }
 
 interface UseThemeSearchOptions {
@@ -47,6 +50,24 @@ const fetchGenericThemesFromAPI = async () => {
   }
 };
 
+const checkPlan = async (): Promise<'pro' | 'basic'> => {
+  const { email, licenseKey } = getLicenseDataFromStorage();
+
+  if (!email || !licenseKey) {
+    return 'basic';
+  }
+
+  const fetchPlanUrl = `https://shadcnstudio.com/api/ide-extension/plan-variant?email=${email}&license_key=${licenseKey}`;
+
+  try {
+    const response = await fetch(fetchPlanUrl, { method: 'GET' });
+    const data = await response.json();
+    return data['plan_variant'] as 'pro' | 'basic';
+  } catch (error) {
+    console.error('Failed to fetch plan variant:', error);
+  }
+};
+
 const fetchUserThemesFromAPI = async () => {
   const { email, licenseKey } = getLicenseDataFromStorage();
   const fetchThemesUrl = `https://shadcnstudio.com/api/user-themes?email=${email}&license_key=${licenseKey}&is_extension=true`;
@@ -71,9 +92,14 @@ const fetchThemesFromAPI = async () => {
   const userThemes = await fetchUserThemesFromAPI();
   const genericThemes = await fetchGenericThemesFromAPI();
 
-  return userThemes.length > 0
-    ? [...userThemes, ...genericThemes]
-    : genericThemes;
+  const userPlan = await checkPlan();
+
+  const allThemes =
+    userThemes.length > 0 ? [...userThemes, ...genericThemes] : genericThemes;
+
+  return userPlan === 'basic'
+    ? allThemes.filter((theme) => theme.meta?.isPro !== true)
+    : allThemes;
 };
 
 const fetchAndSearchThemes = async (searchQuery: string) => {

@@ -22,6 +22,7 @@ export interface MetaItem {
   category: string;
   section: string;
   isPro: boolean;
+  isBasic: boolean;
 }
 
 interface UseBlockSearchOptions {
@@ -29,6 +30,8 @@ interface UseBlockSearchOptions {
   debounceMs?: number;
   minScore?: number;
   maxResults?: number;
+  licenseKey?: string;
+  email?: string;
 }
 
 interface UseBlockSearchResult {
@@ -54,10 +57,29 @@ const performLocalSearch = (
 };
 
 const filterProBlocks = (blocks: BlockItem[]): BlockItem[] => {
-  return blocks.filter((block) => block.meta?.isPro === false);
+  return blocks.filter((block) => block.meta?.isBasic === false);
 };
 
-const fetchBlocksFromAPI = async (isValidated?: boolean) => {
+const checkPlan = async (
+  licenseKey: string,
+  email: string,
+): Promise<'pro' | 'basic'> => {
+  const fetchPlanUrl = `https://shadcnstudio.com/api/ide-extension/plan-variant?email=${email}&license_key=${licenseKey}`;
+
+  try {
+    const response = await fetch(fetchPlanUrl, { method: 'GET' });
+    const data = await response.json();
+    return data['plan_variant'] as 'pro' | 'basic';
+  } catch (error) {
+    console.error('Failed to fetch plan variant:', error);
+  }
+};
+
+const fetchBlocksFromAPI = async (
+  isValidated?: boolean,
+  licenseKey?: string,
+  email?: string,
+) => {
   const fetchBlocksUrl =
     'https://shadcnstudio.com/r/blocks/registry.json?is_extension=true';
 
@@ -72,8 +94,14 @@ const fetchBlocksFromAPI = async (isValidated?: boolean) => {
     const data = await response.json();
     let blocks = data.items as BlockItem[];
 
+    let planVariant: 'pro' | 'basic' = 'basic';
+    if (isValidated && licenseKey && email) {
+      planVariant = await checkPlan(licenseKey, email);
+    }
+
+    console.log('User plan variant:', planVariant, 'isValidated:', isValidated);
     // Filter Pro blocks if license is not validated
-    if (!isValidated) {
+    if (!isValidated || (isValidated && planVariant === 'basic')) {
       blocks = filterProBlocks(blocks);
     }
 
@@ -87,10 +115,16 @@ const fetchBlocksFromAPI = async (isValidated?: boolean) => {
 const fetchAndSearchBlocks = async (
   query: string,
   isValidated?: boolean,
+  licenseKey?: string,
+  email?: string,
 ): Promise<BlockItem[]> => {
   try {
     // Step 1: Fetch from the registry
-    const searchResults = await fetchBlocksFromAPI(isValidated);
+    const searchResults = await fetchBlocksFromAPI(
+      isValidated,
+      licenseKey,
+      email,
+    );
     if (searchResults.length === 0) {
       return [];
     }
@@ -138,6 +172,8 @@ export const useBlockSearch = (
     debounceMs = 200,
     minScore = 0.35,
     maxResults = 20,
+    licenseKey,
+    email,
   } = options;
 
   const [searchResults, setSearchResults] = useState<BlockItem[]>([]);
@@ -167,7 +203,12 @@ export const useBlockSearch = (
         setSearchResults(localResults);
 
         // Step 2: Fetch from Shadcn/studio API (includes fuzzy search)
-        const apiResults = await fetchAndSearchBlocks(query, isValidated);
+        const apiResults = await fetchAndSearchBlocks(
+          query,
+          isValidated,
+          licenseKey,
+          email,
+        );
 
         if (apiResults.length > 0) {
           const combinedResults = [...apiResults, ...localResults];
@@ -188,7 +229,16 @@ export const useBlockSearch = (
     }, debounceMs);
 
     return () => clearTimeout(searchTimeout);
-  }, [searchQuery, localBlocks, isValidated, debounceMs, minScore, maxResults]);
+  }, [
+    searchQuery,
+    localBlocks,
+    isValidated,
+    debounceMs,
+    minScore,
+    maxResults,
+    licenseKey,
+    email,
+  ]);
 
   return {
     searchResults,

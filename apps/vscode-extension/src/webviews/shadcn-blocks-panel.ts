@@ -11,6 +11,11 @@ interface LicenseData {
   licenseKey: string;
 }
 
+interface validationResponse {
+  isValid: boolean;
+  message: string;
+}
+
 export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'shadcn.blocksView';
 
@@ -97,13 +102,13 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
 
     // Update cache
     this._licenseValidationCache = {
-      isValid,
+      isValid: isValid.isValid,
       timestamp: Date.now(),
       email,
       licenseKey,
     };
 
-    return isValid;
+    return isValid.isValid;
   }
 
   private _getUserConfig = () => {
@@ -137,7 +142,7 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
         data.licenseKey,
       );
 
-      if (isLicenseValid) {
+      if (isLicenseValid.isValid) {
         await config.update(
           'licenseEmail',
           data.email,
@@ -158,11 +163,13 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
         }
         vscode.window.showInformationMessage('License saved successfully!');
       } else {
-        throw new Error('Invalid license data');
+        throw new Error(isLicenseValid.message);
       }
     } catch (error) {
       console.error('Error saving license data:', error);
-      vscode.window.showErrorMessage('Failed to save license data');
+      vscode.window.showErrorMessage(
+        error instanceof Error ? error.message : 'Failed to save license data',
+      );
 
       if (this._view) {
         this._view.webview.postMessage({
@@ -203,7 +210,7 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
   private async _validateLicenseData(
     email: string,
     licenseKey: string,
-  ): Promise<boolean> {
+  ): Promise<validationResponse> {
     // Basic validation: check if email contains "@" and licenseKey is non-empty
 
     try {
@@ -217,16 +224,23 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
         },
       });
 
+      const responseData = (await response.json()) as validationResponse;
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(responseData.message);
       } else {
-        const result = await response.json();
-        console.log('License validated:', result);
-        return true;
+        console.log('License validated:', responseData);
+        return {
+          isValid: true,
+          message: responseData.message,
+        };
       }
     } catch (error) {
       console.error('Error validating license data:', error);
-      return false;
+      return {
+        isValid: false,
+        message: error instanceof Error ? error.message : 'Validation failed',
+      };
     }
   }
 
@@ -319,13 +333,28 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
       const genericThemes = await this._fetchGenericThemes();
       const userThemes = await this._fetchUserThemes();
 
+      const planVariant = await this._getPlanDetails();
+
       // Combine themes, prioritizing user-specific themes
       const themesData = {
         items: [...(userThemes || []), ...(genericThemes || [])],
         name: 'All Themes',
       };
 
-      console.log('Combined themes data:', themesData);
+      const { email, licenseKey } = this._getUserConfig();
+
+      // Determine whether we have credentials and whether they're valid.
+      const hasCredentials = Boolean(email && licenseKey);
+      const isValid = hasCredentials
+        ? await this._isLicenseValid(email, licenseKey)
+        : false;
+
+      // If plan is basic, filter out pro themes
+      if (!hasCredentials || !isValid || planVariant === 'basic') {
+        themesData.items = themesData.items.filter((theme) => {
+          return theme.meta?.isPro !== true;
+        });
+      }
 
       // Send data to webview
       if (this._view) {
@@ -379,6 +408,34 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
     }
   }
 
+  private async _getPlanDetails() {
+    try {
+      const { email, licenseKey } = this._getUserConfig();
+
+      const planDetailsUrl = `https://shadcnstudio.com/api/ide-extension/plan-variant?email=${email}&license_key=${licenseKey}`;
+
+      const response = await fetch(planDetailsUrl, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const planDetailsData = (await response.json()) as {
+        plan_variant: string;
+      };
+      return planDetailsData['plan_variant'];
+    } catch (error) {
+      console.error('Error fetching plan details:', error);
+      return null;
+    }
+  }
+
   private async _fetchSectionsData() {
     try {
       // Show loading state
@@ -414,10 +471,12 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
         ? await this._isLicenseValid(email, licenseKey)
         : false;
 
+      const planVariant = await this._getPlanDetails();
+
       // If there are no credentials or the credentials are invalid, filter out pro blocks
-      if (!hasCredentials || !isValid) {
+      if (!hasCredentials || !isValid || planVariant === 'basic') {
         registryData.items = registryData.items.filter((item: Item) => {
-          return item.meta?.isPro === false;
+          return item.meta?.isBasic === false;
         });
       }
 
@@ -497,7 +556,7 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
       // If there are no credentials or the credentials are invalid, filter out pro blocks
       if (!hasCredentials || !isValid) {
         registryData.items = registryData.items.filter((item: Item) => {
-          return item.meta?.isPro === false;
+          return item.meta?.isBasic === false;
         });
       }
 

@@ -32,6 +32,7 @@ export interface Item {
     title: string;
     isPro?: boolean;
     isNew?: boolean;
+    isBasic?: boolean;
   };
 }
 
@@ -170,9 +171,6 @@ export const getSections = (items: Item[]): Section[] => {
     sectionData.count++;
     sectionData.items.push(item);
   });
-
-  // print all section Name
-  console.log('Sections found:', Array.from(sectionMap.keys()));
 
   return Array.from(sectionMap.values());
 };

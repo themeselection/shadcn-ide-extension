@@ -11,6 +11,11 @@ interface LicenseKeyState {
   lastValidated: Date | null;
 }
 
+interface ValidationResult {
+  isValid: boolean;
+  message?: string;
+}
+
 export function useLicenseKey() {
   const [licenseState, setLicenseState] = useState<LicenseKeyState>({
     licenseKey: null,
@@ -61,13 +66,13 @@ export function useLicenseKey() {
   }, [loadLicenseKey]);
 
   const validateLicenseKey = useCallback(
-    async (licensekey: string, email: string): Promise<boolean> => {
+    async (licensekey: string, email: string): Promise<ValidationResult> => {
       if (!licensekey || typeof licensekey !== 'string') {
-        return false;
+        return { isValid: false, message: 'Invalid license key' };
       }
 
       if (!email || typeof email !== 'string' || !email.includes('@')) {
-        return false;
+        return { isValid: false, message: 'Invalid email' };
       }
 
       const trimmedLicenseKey = licensekey.trim();
@@ -82,14 +87,21 @@ export function useLicenseKey() {
         },
       });
 
+      const data = await response.json();
       if (!response.ok) {
         console.error(
           'License key validation request failed:',
           response.status,
         );
-        return false;
+        return {
+          isValid: false,
+          message: data.message,
+        };
       }
-      return true;
+      return {
+        isValid: true,
+        message: data.message || 'License key validation successful',
+      };
     },
     [],
   );
@@ -175,47 +187,51 @@ export function useLicenseKey() {
     }
   }, []);
 
-  const refreshLicenseValidation = useCallback(async (): Promise<boolean> => {
-    if (!licenseState.licenseKey) {
-      return false;
-    }
-
-    try {
-      const isValid = await validateLicenseKey(
-        licenseState.licenseKey,
-        licenseState.email,
-      );
-
-      if (isValid) {
-        const licenseData = {
-          licenseKey: licenseState.licenseKey,
-          email: licenseState.email,
-          isValidated: true,
-          lastValidated: new Date().toISOString(),
-        };
-
-        localStorage.setItem(
-          LICENSE_KEY_STORAGE_KEY,
-          JSON.stringify(licenseData),
-        );
-
-        setLicenseState((prev) => ({
-          ...prev,
-          isProUser: true,
-          isValidated: true,
-          lastValidated: new Date(),
-        }));
-      } else {
-        // License is no longer valid, remove it
-        removeLicenseKey();
+  const refreshLicenseValidation =
+    useCallback(async (): Promise<ValidationResult> => {
+      if (!licenseState.licenseKey) {
+        return { isValid: false, message: 'No license key found' };
       }
 
-      return isValid;
-    } catch (error) {
-      console.error('Failed to refresh license validation:', error);
-      return false;
-    }
-  }, [licenseState.licenseKey, validateLicenseKey, removeLicenseKey]);
+      try {
+        const isValid = await validateLicenseKey(
+          licenseState.licenseKey,
+          licenseState.email,
+        );
+
+        if (isValid) {
+          const licenseData = {
+            licenseKey: licenseState.licenseKey,
+            email: licenseState.email,
+            isValidated: true,
+            lastValidated: new Date().toISOString(),
+          };
+
+          localStorage.setItem(
+            LICENSE_KEY_STORAGE_KEY,
+            JSON.stringify(licenseData),
+          );
+
+          setLicenseState((prev) => ({
+            ...prev,
+            isProUser: true,
+            isValidated: true,
+            lastValidated: new Date(),
+          }));
+        } else {
+          // License is no longer valid, remove it
+          removeLicenseKey();
+        }
+
+        return isValid;
+      } catch (error) {
+        console.error('Failed to refresh license validation:', error);
+        return {
+          isValid: false,
+          message: 'Failed to refresh license validation',
+        };
+      }
+    }, [licenseState.licenseKey, validateLicenseKey, removeLicenseKey]);
 
   // Helper to check if license needs revalidation (e.g., every 24 hours)
   const needsRevalidation = useCallback((): boolean => {
