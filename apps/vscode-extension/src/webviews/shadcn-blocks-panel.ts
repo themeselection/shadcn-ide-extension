@@ -214,7 +214,7 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
     // Basic validation: check if email contains "@" and licenseKey is non-empty
 
     try {
-      const validateLicenseDataUrl = `https://shadcnstudio.com/api/validate-user?email=${email}&license_key=${licenseKey}`;
+      const validateLicenseDataUrl = `https://shadcnstudio.com/api/ide-extension/validate-user?email=${email}&license_key=${licenseKey}`;
 
       const response = await fetch(validateLicenseDataUrl, {
         method: 'GET',
@@ -284,7 +284,7 @@ export class ShadcnBlocksProvider implements vscode.WebviewViewProvider {
     try {
       const { email, licenseKey } = this._getUserConfig();
 
-      const themesUrl = `https://shadcnstudio.com/api/user-themes?email=${email}&license_key=${licenseKey}&is_extension=true`;
+      const themesUrl = `https://shadcnstudio.com/api/ide-extension/user-themes?email=${email}&license_key=${licenseKey}&is_extension=true`;
       console.log('Fetching user themes from URL:', themesUrl);
       // Fetch shadcn themes from the shadcn studio registry
       const response = await fetch(themesUrl, {

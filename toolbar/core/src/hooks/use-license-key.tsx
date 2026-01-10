@@ -78,7 +78,7 @@ export function useLicenseKey() {
       const trimmedLicenseKey = licensekey.trim();
       const trimmedEmail = email.trim();
 
-      const validateUrl = `https://shadcnstudio.com/api/validate-user?email=${trimmedEmail}&license_key=${trimmedLicenseKey}`;
+      const validateUrl = `https://shadcnstudio.com/api/ide-extension/validate-user?email=${trimmedEmail}&license_key=${trimmedLicenseKey}`;
 
       const response = await fetch(validateUrl, {
         method: 'GET',
