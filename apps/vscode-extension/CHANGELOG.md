@@ -9,3 +9,7 @@
 - Introduced toolbar integration for quick actions like accessing Shadcn/studio blocks, shadcn/studio themes and library documentation.
 
 - Integrated documentation lookup via Context7.
+
+## 1.0.1
+
+- Updated as per the new pricing in Shadcn/studio.
